@@ -1,0 +1,373 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   TEMA - RENK DEĞİŞKENLERİ
+   Buradan düzenleyebilirsin, her şey otomatik güncellenir.
+
+   HAZIR TEMA ÖRNEKLERİ:
+   ─ Koyu (varsayılan):  --bg-page: #000000  --text-primary: #ffffff
+   ─ Krem (şu an):       --bg-page: #f2ede4  --text-primary: #292524
+   ─ Koyu deniz:         --bg-page: #0a1628  --text-primary: #e2e8f0
+   ============================================================ */
+:root {
+  /* --- Arka planlar --- */
+  --bg-page:           #000000;                      /* Ana sayfa zemin rengi */
+  --bg-page-overlay:   #18181b;                      /* Zemin üstündeki ince örtü (zinc-900) */
+  --nav-bg-rgb:        24, 24, 27;                   /* Nav arkaplanı (r,g,b — sadece sayılar) */
+
+  /* --- Bölüm kartları (About, Projects, Contact kutuları) --- */
+  --bg-card:           rgba(255, 255, 255, 0.02);    /* Kart arka planı */
+  --border-card:       rgba(255, 255, 255, 0.05);    /* Kart kenarlık rengi */
+
+  /* --- Metin renkleri --- */
+  --text-primary:      rgba(255, 255, 255, 0.9);                 /* Ana başlık ve metin */
+  --text-secondary:    rgba(255, 255, 255, 0.6);    /* İkincil metin */
+  --text-muted:        rgba(255, 255, 255, 0.8);    /* Soluk metin */
+  --text-faint:        rgba(255, 255, 255, 0.3);    /* Çok soluk (footer vb.) */
+
+  /* --- Vurgu rengi (accent) --- */
+  --accent:            #fbbf24;                      /* Ana vurgu (amber-400) */
+  --accent-dark:       #f59e0b;                      /* Koyu vurgu (amber-500) */
+  --accent-bg:         rgba(245, 158, 11, 0.20);     /* Vurgu arka plan tonu */
+  --accent-border:     rgba(245, 158, 11, 0.30);     /* Vurgu kenarlık tonu */
+
+  /* --- Dekoratif arka plan orb'ları (bulanık daireler) --- */
+  --orb-1:             rgba(245, 158, 11, 0.05);     /* Sol üst orb rengi */
+  --orb-2:             rgba(6,  182, 212, 0.05);     /* Sağ orb rengi */
+  --orb-3:             rgba(16, 185, 129, 0.05);     /* Alt sol orb rengi */
+
+  /* --- Liquid Glass (cam malzeme) --- */
+  --glass-edge:        rgba(255, 255, 255, 0.1);    /* Kenarda dolaşan parlak ışık */
+  --glass-sheen:       rgba(255, 255, 255, 0.01);    /* Üst kenar parıltısı (sheen) — düşük tutuldu */
+  --glass-inner:       rgba(255, 255, 255, 0.01);    /* İnce iç çerçeve */
+  --glass-shadow:      rgba(0, 0, 0, 0.1);          /* Cam derinlik gölgesi */
+  --glass-angle:       0deg;                         /* Kenar ışığının açısı (scroll ile döner) */
+}
+
+/* ─── ABOUT KART TOGGLE ─────────────────────────────────────────
+   About bölümünü arkaplanla tamamen birleşik yapmak için
+   alttaki bloğun  yorumlarını kaldırın.
+   Kartı geri getirmek için tekrar  arasına alın.
+   ────────────────────────────────────────────────────────────── */
+ .about-card {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+.about-card::before,
+.about-card::after {
+  display: none !important;
+}
+.about-card-overlay {
+  display: none !important;
+} 
+/* ============================================================ */
+
+/* Performance optimizations */
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@keyframes fade-in-up {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+/* Premium glass morphism effects */
+.glass-card {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================================================
+   LIQUID GLASS - Apple tarzı cam malzeme
+   Mevcut kartlara eklenir; arkayı kırıp büker, kenarda
+   ışık yakalar, yumuşak iç parıltı ve derinlik verir.
+   ============================================================ */
+.liquid-glass {
+  position: relative;
+  isolation: isolate;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  box-shadow:
+    0 8px 32px var(--glass-shadow),
+    inset 0 1px 0 var(--glass-edge),
+    inset 0 0 0 1px var(--glass-inner),
+    inset 0 -8px 24px rgba(0, 0, 0, 0.18);
+  transition: box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hafif varyant: blur'lu bir cam yüzeyin ÜZERİNDE duran kartlar için.
+   Kendi backdrop-filter'ı yoktur (performans), sadece kenar ışığı + parıltı. */
+.liquid-glass-soft {
+  position: relative;
+  isolation: isolate;
+  box-shadow:
+    inset 0 1px 0 var(--glass-edge),
+    inset 0 0 0 1px var(--glass-inner),
+    inset 0 -6px 18px rgba(0, 0, 0, 0.14);
+  transition: box-shadow 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Sadece üst kenarda ince bir parıltı — iç kısmı beyazlatmaz */
+.liquid-glass::before,
+.liquid-glass-soft::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(180deg, var(--glass-sheen) 0%, transparent 18%);
+}
+
+/* Kenarda dolaşan parlak ışık yayları — açı scroll ile değişir (liquid efekt) */
+.liquid-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1.5px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--glass-angle),
+    transparent 0deg,
+    var(--glass-edge) 50deg,
+    transparent 135deg,
+    transparent 225deg,
+    var(--glass-edge) 305deg,
+    transparent 360deg
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* Hover: kenar ışığı güçlenir, cam hafifçe öne çıkar */
+@media (hover: hover) {
+  .liquid-glass:hover {
+    box-shadow:
+      0 18px 48px var(--glass-shadow),
+      inset 0 1px 0 var(--glass-edge),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      inset 0 -8px 24px rgba(0, 0, 0, 0.18);
+  }
+  .liquid-glass-lift:hover {
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-glass,
+  .liquid-glass-lift:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* Smooth progress bar */
+.progress-bar {
+  transition: width 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: width;
+}
+
+/* Text effects */
+.text-shadow-lg {
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* App Store buttons */
+.app-store-btn {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 10px;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.app-store-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.app-store-btn img {
+  transition: filter 0.3s ease;
+}
+
+.app-store-btn:hover img {
+  filter: brightness(1.1);
+}
+
+/* Hover effects */
+.screenshot-hover {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.screenshot-hover:hover {
+  transform: scale(1.02) translateY(-2px);
+}
+
+/* Input focus states with amber accent */
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.2);
+  outline: none;
+}
+
+/* Loading animation */
+.loading {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: shimmer 2s infinite;
+}
+
+/* Group hover effects */
+.group:hover .group-hover\:scale-110 {
+  transform: scale(1.1);
+}
+
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1;
+}
+
+/* Responsive optimizations for mobile */
+@media (max-width: 768px) {
+  /* Reduce blur on mobile for better performance */
+  .backdrop-blur-xl {
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .backdrop-blur-md {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  .backdrop-blur-sm {
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+  }
+
+  /* Lighter glass blur on mobile for better performance */
+  .liquid-glass {
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+  }
+
+  /* Simplify animations on mobile */
+  .animate-float-particle {
+    animation-duration: 10s;
+  }
+
+  .animate-pulse-slow {
+    animation-duration: 8s;
+  }
+}
+
+/* Optimize for slow connections */
+@media (prefers-reduced-data: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Hardware acceleration for smooth animations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-border);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-dark);
+}
+
+/* Firefox scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-border) rgba(0, 0, 0, 0.1);
+}
