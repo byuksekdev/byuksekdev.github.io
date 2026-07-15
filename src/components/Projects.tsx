@@ -45,12 +45,12 @@ const Projects = () => {
           The game features a variety of boosters, booster combinations, and obstacles that add strategic depth to gameplay.
           Developed an advanced level editor to support both manual level creation and configurable tile-generation systems for dynamically spawned incoming tiles.`,
           icon: "/AppIcons/AppIcon_Match-3Puzzle.png",
-          videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782567514/ScreenRecording_06-27-2026_15-32-22_1_hcuok6.mp4",
+          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783969683/ScreenRecording_06-27-2026_15-32-22_1_pgw4n8.mp4",
           screenshots: [
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782566999/IMG_1335_g54rvj.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782567005/IMG_1337_wkscqg.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782566986/IMG_1338_qw548k.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782566997/IMG_1340_v03efq.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783969612/IMG_1335_fi8n05.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783969612/IMG_1337_zot7qp.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783969613/IMG_1338_ktpeif.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783969613/IMG_1340_zcbq9y.png",
           ]
         },
         {
@@ -61,12 +61,12 @@ const Projects = () => {
 
           Level configuration system was developed to support flexible level creation and control gameplay parameters, generation rules, and difficulty.`,
           icon: "/AppIcons/AppIcon_BubbleShooter.png",
-          videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782568887/ScreenRecording_dnvbxn.mp4",
+          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783970939/ScreenRecording_vmyqin.mp4",
           screenshots: [
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1776505563/IMG_0614_zmnabk.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1776505562/IMG_0615_yqnaei.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1776505562/IMG_0617_dcvzyi.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782567085/IMG_0643_mpqndu.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783970839/IMG_0614_asjhic.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783970839/IMG_0615_a9ar2m.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783970839/IMG_0617_xljuml.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783970839/IMG_0643_wapfxo.png",
           ]
         },
         {
@@ -75,12 +75,12 @@ const Projects = () => {
 
 The game features realistic cue controls, ball physics and rule based win and foul conditions.`,
           icon: "/AppIcons/AppIcon_8Ball.png",
-          videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782592036/ScreenRecording_06-27-2026_21-42-07_1_klajm8.mp4",
+          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783971508/ScreenRecording_06-27-2026_21-42-07_1_ub045w.mp4",
           screenshots: [
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782591912/IMG_1369_opkpxt.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782591913/IMG_1370_swknyy.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782591910/IMG_1366_wrj6ua.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782591906/IMG_1367_rmn7jx.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971402/IMG_1369_aumgsb.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971399/IMG_1370_u37vhk.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971401/IMG_1366_fapjsn.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971399/IMG_1367_zgeqlv.png",
           ]
         },
         {
@@ -89,12 +89,12 @@ The game features realistic cue controls, ball physics and rule based win and fo
 
 A custom deck generator was developed to create balanced deck layouts that support engaging gameplay, controlled difficulty progression, and varied level experiences.`,
           icon: "/AppIcons/AppIcon_Blackjack.png",
-          videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782577571/ScreenRecording_06-27-2026_18-01-53_1_i2y87t.mp4",
+          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783971771/ScreenRecording_06-27-2026_18-01-53_1_gnhgil.mp4",
           screenshots: [
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782577459/IMG_1350_cawjsc.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782577452/IMG_1351_fqyu2j.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782577458/IMG_1352_jftn8l.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782577459/IMG_1354_ipsnuf.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971715/IMG_1350_qxdjuh.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971710/IMG_1351_jyi10t.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971714/IMG_1352_qtj4y3.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971716/IMG_1354_jjxklm.png",
           ]
         },
         {
@@ -105,12 +105,12 @@ The game features multiple block mechanics, including dual-color blocks, Ice Blo
 
 Developed a custom level editor to support the creation of varied level layouts and puzzle configurations.`,
           icon: "/AppIcons/AppIcon_ColorBlocks.png",
-          videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782571428/ScreenRecording_06-27-2026_15-52-33_1_df7upw.mp4",
+          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783972985/ScreenRecording_06-27-2026_15-52-33_1_lugqey.mp4",
           screenshots: [
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782571364/IMG_1345_ttudet.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782571362/IMG_1344_k6hkwf.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782571364/IMG_1342_lgkfoi.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782571437/IMG_1343_wlxis0.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783972945/IMG_1345_lddqbq.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783972945/IMG_1344_ybsdpl.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783972945/IMG_1342_pnylna.png",
+            "https://res.cloudinary.com/svtjiue8/image/upload/v1783972944/IMG_1343_mm6z7e.png",
           ]
         },
         {
@@ -119,12 +119,12 @@ Developed a custom level editor to support the creation of varied level layouts 
 
           Developed a configurable tile generation system to control incoming tile patterns, values, and gameplay difficulty.`,
           icon: "/AppIcons/AppIcon_Link2248.png",
-          videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782578258/ScreenRecording_06-27-2026_18-06-43_1_jujkym.mp4",
+          videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1783973685/ScreenRecording_06-27-2026_18-06-43_1_q4op6x.mp4",
           screenshots: [
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782578165/IMG_1356_vgg6ia.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782578165/IMG_1360_umtylk.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782578169/IMG_1359_qo95tu.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782578160/IMG_1357_a0dfhe.png",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783973636/IMG_1356_hrcfsp.png",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783973633/IMG_1360_pw7tcm.png",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783973633/IMG_1359_bjecm5.png",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783973633/IMG_1357_natcbf.png",
           ]
         },
         {
@@ -133,12 +133,12 @@ Developed a custom level editor to support the creation of varied level layouts 
 
           Developed a custom editor that supports both manual level creation and automatic level generation based on a word dataset.`,
           icon: "/AppIcons/AppIcon_WordLink.png",
-          videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782562169/ScreenRecording_06-25-2026_22-09-16_1_gwrbsl.mp4",
+          videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1783974105/ScreenRecording_06-25-2026_22-09-16_1_kjjeuz.mp4",
           screenshots: [
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782560519/IMG_1316_eghaai.jpg",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782560519/IMG_1313_sb6x0v.jpg",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782560520/IMG_1314_gbgmx7.jpg",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782560999/IMG_1328_hmsi3m.jpg",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783974080/IMG_1316_e5zymw.jpg",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783974079/IMG_1313_ww1brf.jpg",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783974079/IMG_1314_rpducc.jpg",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783974080/IMG_1328_jcr6an.jpg",
           ]
         },
         {
@@ -147,12 +147,12 @@ Developed a custom level editor to support the creation of varied level layouts 
 
 The game features strategic deck management, streak-based scoring, Wild Cards, and level objectives designed to create varied gameplay challenges.`,
           icon: "/AppIcons/AppIcon_TripeakSolitaire.png",
-          videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782592995/ScreenRecording_06-27-2026_21-49-38_1_jxvial.mp4",
+          videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1783975409/ScreenRecording_06-27-2026_21-49-38_1_lnvqtq.mp4",
           screenshots: [
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782632558/IMG_1372_bjwsqz.jpg",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782632557/IMG_1373_qenszu.jpg",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782632558/IMG_1376_ausnpd.jpg",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782632558/IMG_1375_efynj4.jpg",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975335/IMG_1372_ibv3ar.jpg",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975333/IMG_1373_yyhmdb.jpg",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975333/IMG_1376_l95urm.jpg",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975333/IMG_1375_chntv4.jpg",
           ]
         },
         {
@@ -161,12 +161,12 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
           
           Developed a configurable shape spawn system to control incoming shape types, spawn patterns, and gameplay difficulty.`,
           icon: "/AppIcons/AppIcon_ShapeMerge.png",
-          videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782581572/ScreenRecording_04-16-2026_21-45-47_1_wmxln0.mp4",
+          videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1783975803/ScreenRecording_04-16-2026_21-45-47_1_nqkxtw.mp4",
           screenshots: [
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782581448/IMG_0609_ialsem.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782581442/IMG_0608_foahga.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782581438/IMG_0611_mdonc9.png",
-            "https://res.cloudinary.com/dhfmfwycm/image/upload/v1782581436/IMG_0610_s861c7.png",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975724/IMG_0609_tkqibt.png",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975724/IMG_0608_ehdlos.png",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975724/IMG_0611_ogvbmb.png",
+            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975724/IMG_0610_fpxamr.png",
           ]
         }
       ],
@@ -184,57 +184,54 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
       title: "Raft Adventure 3D",
       subtitle: "Survival Adventure Game",
       description: "Survive on a raft in the middle of the ocean! Collect resources, build your raft, and explore mysterious islands in this immersive 3D survival adventure.",
-      icon: "https://res.cloudinary.com/dhfmfwycm/image/upload/v1770059348/PotatoTownIcon_re6rno.jpg",
+      icon: "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/fish-hunter_boelnf.webp",
       screenshots: [
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1779830059/51881d1f1c37ec8d8dbf900f875783ec_w9xiqk.png",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1780342903/1825c158f2a04712bd1c44d2631a25a8_tez4by.webp",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1779830055/58da917b389031b84adbbef2ca7caa95_kzkpvb.png",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1779830060/fbc7f48b222f8e01b94c36d5cc5fa7dd_jtcdqm.png"
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/51881d1f1c37ec8d8dbf900f875783ec_oh7hs3.png",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/1825c158f2a04712bd1c44d2631a25a8_esle5b.webp",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/58da917b389031b84adbbef2ca7caa95_lwkn9i.png",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/fbc7f48b222f8e01b94c36d5cc5fa7dd_vnkhge.png"
       ],
-      videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1778607488/RaftAdventure3D_gtelzf.mp4",
+      videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1784142396/RaftAdventure3D_uxiflr.mp4",
       iosLink: "https://apps.apple.com/us/app/fish-hunter-sea-adventure/id1665911252"
     },
     {
       title: "Dive Seeker",
       subtitle: "Underwater Exploration",
       description: "Explore the depths of the ocean in this breathtaking underwater adventure. Discover treasures, mysterious sea creatures, and hidden secrets of the deep.",
-      icon: "https://res.cloudinary.com/dhfmfwycm/image/upload/v1778606553/DiveSeeker_Icon_imgupscaler.ai_General_2K-min-min_q7gsnj.jpg",
+      icon: "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141412/DiveSeeker_Icon_imgupscaler.ai_General_2K-min-min_n7bsyn.jpg",
       screenshots: [
-/*"https://res.cloudinary.com/dhfmfwycm/image/upload/v1778606553/DiveSeeker_3_imgupscaler.ai_General_2K-min-min_w4hj6w.jpg",*/
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1778606554/DiveSeeker_2_imgupscaler.ai_General_2K-min-min_tuznfo.jpg",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1778606554/DiveSeeker_5_imgupscaler.ai_General_2K-min-min_qmhmua.jpg",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1778606554/DiveSeeker_4_imgupscaler.ai_General_2K-min-min_jibfs6.jpg",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1778606553/DiveSeeker_6_imgupscaler.ai_General_2K-min-min_utscil.jpg"
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141412/DiveSeeker_2_imgupscaler.ai_General_2K-min-min_unu6aj.jpg",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141412/DiveSeeker_5_imgupscaler.ai_General_2K-min-min_egszv8.jpg",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141413/DiveSeeker_4_imgupscaler.ai_General_2K-min-min_m7xudl.jpg",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141412/DiveSeeker_6_imgupscaler.ai_General_2K-min-min_rlfdck.jpg"
       ],
-      videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1782643139/movie_033_ueioay.mp4"
+      videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1784141812/movie_033_a64vea.mp4"
     },
     {
       title: "Fashion Cash",
       subtitle: "Business Simulation",
       description: "Build your fashion empire from the ground up! Design trendy clothes, manage your boutique, and become the ultimate fashion mogul in this addictive business sim.",
-      icon: "https://res.cloudinary.com/dhfmfwycm/image/upload/v1774717344/FashionCashIcon_zjhldc.webp",
+      icon: "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCashIcon_agluht.webp",
       screenshots: [
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1774716474/FashionCash1_bpls9e.png",
-        /*"https://res.cloudinary.com/dhfmfwycm/image/upload/v1774716474/FashionCash2_nq49lt.png",*/
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1774716473/FashionCash3_xe4liv.png",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1774716474/FashionCash4_wyswbv.png",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1774716474/FashionCash5_kprceq.png"
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCash1_kttx2q.png",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCash3_mki8zk.png",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCash4_gy8k2m.png",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCash5_lwvz2e.png"
       ],
-      videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/v1774717004/FashionCashVideoCompressed_s9twvp.mp4"
+      videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1784061451/FashionCashVideoCompressed_v9bztu.mp4"
     },
     {
       title: "Potato Town",
       subtitle: "City Building & Management",
       description: "Build and manage your own potato-themed town! Grow crops, construct buildings, and create a thriving community in this charming city-building adventure.",
-      icon: "https://res.cloudinary.com/dhfmfwycm/image/upload/v1770059348/PotatoTownIcon_re6rno.jpg",
+      icon: "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownIcon_twklws.jpg",
       screenshots: [
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1770059356/PotatoTownImage3_rvdzty.png",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1770059352/PotatoTownImage6_gz9wwj.png",
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1770059354/PotatoTownImage7_h4c7zd.png",
-        /*"https://res.cloudinary.com/dhfmfwycm/image/upload/v1770059354/PotatoTownImage2_s5fcdj.png",*/
-        "https://res.cloudinary.com/dhfmfwycm/image/upload/v1770059353/PotatoTownImage4_bn6f20.png"
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownImage3_xqzawa.png",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownImage6_agaaxu.png",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownImage7_jcqlue.png",
+        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownImage4_rhijbn.png"
       ],
-      videoUrl: "https://res.cloudinary.com/dhfmfwycm/video/upload/Potato_Town_App_Store_unhcii.mp4"
+      videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1784061108/Potato_Town_Video_eot5hr.mp4"
     }
   ];
 
