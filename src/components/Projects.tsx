@@ -1,14 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import { X, Play, ChevronLeft, ChevronRight } from 'lucide-react';
-import LazyVideo, { optimizeVideo } from './LazyVideo';
+import LazyVideo from './LazyVideo';
 
-// Injects size/format optimization into Cloudinary URLs.
-// Leaves non-Cloudinary or already-transformed URLs untouched.
-const optimizeImage = (url: string, transform: string) => {
-  if (!url.includes('res.cloudinary.com') || !url.includes('/upload/')) return url;
-  if (/\/upload\/[^/]*(?:f_|q_|w_)/.test(url)) return url;
-  return url.replace('/upload/', `/upload/${transform}/`);
-};
+// Every local screenshot /media/<game>/shot-N.<ext> has a 480px grid version shot-N-thumb.webp.
+// The full-size file is only loaded in the lightbox.
+const thumbOf = (url: string) =>
+  url.startsWith('/media/') ? url.replace(/\.(webp|png|jpe?g)$/i, '-thumb.webp') : url;
 
 interface Project {
   title: string;
@@ -45,12 +42,12 @@ const Projects = () => {
           The game features a variety of boosters, booster combinations, and obstacles that add strategic depth to gameplay.
           Developed an advanced level editor to support both manual level creation and configurable tile-generation systems for dynamically spawned incoming tiles.`,
           icon: "/AppIcons/AppIcon_Match-3Puzzle.png",
-          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783969683/ScreenRecording_06-27-2026_15-32-22_1_pgw4n8.mp4",
+          videoUrl: "/media/match-3-puzzle/gameplay.mp4",
           screenshots: [
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783969612/IMG_1335_fi8n05.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783969612/IMG_1337_zot7qp.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783969613/IMG_1338_ktpeif.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783969613/IMG_1340_zcbq9y.png",
+            "/media/match-3-puzzle/shot-1.webp",
+            "/media/match-3-puzzle/shot-2.webp",
+            "/media/match-3-puzzle/shot-3.webp",
+            "/media/match-3-puzzle/shot-4.webp",
           ]
         },
         {
@@ -61,12 +58,12 @@ const Projects = () => {
 
           Level configuration system was developed to support flexible level creation and control gameplay parameters, generation rules, and difficulty.`,
           icon: "/AppIcons/AppIcon_BubbleShooter.png",
-          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783970939/ScreenRecording_vmyqin.mp4",
+          videoUrl: "/media/bubble-shooter/gameplay.mp4",
           screenshots: [
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783970839/IMG_0614_asjhic.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783970839/IMG_0615_a9ar2m.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783970839/IMG_0617_xljuml.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783970839/IMG_0643_wapfxo.png",
+            "/media/bubble-shooter/shot-1.webp",
+            "/media/bubble-shooter/shot-2.webp",
+            "/media/bubble-shooter/shot-3.webp",
+            "/media/bubble-shooter/shot-4.webp",
           ]
         },
         {
@@ -75,12 +72,12 @@ const Projects = () => {
 
 The game features realistic cue controls, ball physics and rule based win and foul conditions.`,
           icon: "/AppIcons/AppIcon_8Ball.png",
-          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783971508/ScreenRecording_06-27-2026_21-42-07_1_ub045w.mp4",
+          videoUrl: "/media/8-ball-pool/gameplay.mp4",
           screenshots: [
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971402/IMG_1369_aumgsb.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971399/IMG_1370_u37vhk.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971401/IMG_1366_fapjsn.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971399/IMG_1367_zgeqlv.png",
+            "/media/8-ball-pool/shot-1.webp",
+            "/media/8-ball-pool/shot-2.webp",
+            "/media/8-ball-pool/shot-3.webp",
+            "/media/8-ball-pool/shot-4.webp",
           ]
         },
         {
@@ -89,12 +86,12 @@ The game features realistic cue controls, ball physics and rule based win and fo
 
 A custom deck generator was developed to create balanced deck layouts that support engaging gameplay, controlled difficulty progression, and varied level experiences.`,
           icon: "/AppIcons/AppIcon_Blackjack.png",
-          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783971771/ScreenRecording_06-27-2026_18-01-53_1_gnhgil.mp4",
+          videoUrl: "/media/blackjack-21/gameplay.mp4",
           screenshots: [
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971715/IMG_1350_qxdjuh.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971710/IMG_1351_jyi10t.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971714/IMG_1352_qtj4y3.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783971716/IMG_1354_jjxklm.png",
+            "/media/blackjack-21/shot-1.webp",
+            "/media/blackjack-21/shot-2.webp",
+            "/media/blackjack-21/shot-3.webp",
+            "/media/blackjack-21/shot-4.webp",
           ]
         },
         {
@@ -105,12 +102,12 @@ The game features multiple block mechanics, including dual-color blocks, Ice Blo
 
 Developed a custom level editor to support the creation of varied level layouts and puzzle configurations.`,
           icon: "/AppIcons/AppIcon_ColorBlocks.png",
-          videoUrl: "https://res.cloudinary.com/svtjiue8/video/upload/v1783972985/ScreenRecording_06-27-2026_15-52-33_1_lugqey.mp4",
+          videoUrl: "/media/color-blocks/gameplay.mp4",
           screenshots: [
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783972945/IMG_1345_lddqbq.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783972945/IMG_1344_ybsdpl.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783972945/IMG_1342_pnylna.png",
-            "https://res.cloudinary.com/svtjiue8/image/upload/v1783972944/IMG_1343_mm6z7e.png",
+            "/media/color-blocks/shot-1.webp",
+            "/media/color-blocks/shot-2.webp",
+            "/media/color-blocks/shot-3.webp",
+            "/media/color-blocks/shot-4.webp",
           ]
         },
         {
@@ -119,12 +116,12 @@ Developed a custom level editor to support the creation of varied level layouts 
 
           Developed a configurable tile generation system to control incoming tile patterns, values, and gameplay difficulty.`,
           icon: "/AppIcons/AppIcon_Link2248.png",
-          videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1783973685/ScreenRecording_06-27-2026_18-06-43_1_q4op6x.mp4",
+          videoUrl: "/media/2248/gameplay.mp4",
           screenshots: [
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783973636/IMG_1356_hrcfsp.png",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783973633/IMG_1360_pw7tcm.png",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783973633/IMG_1359_bjecm5.png",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783973633/IMG_1357_natcbf.png",
+            "/media/2248/shot-1.webp",
+            "/media/2248/shot-2.webp",
+            "/media/2248/shot-3.webp",
+            "/media/2248/shot-4.webp",
           ]
         },
         {
@@ -133,12 +130,12 @@ Developed a custom level editor to support the creation of varied level layouts 
 
           Developed a custom editor that supports both manual level creation and automatic level generation based on a word dataset.`,
           icon: "/AppIcons/AppIcon_WordLink.png",
-          videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1783974105/ScreenRecording_06-25-2026_22-09-16_1_kjjeuz.mp4",
+          videoUrl: "/media/word-link/gameplay.mp4",
           screenshots: [
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783974080/IMG_1316_e5zymw.jpg",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783974079/IMG_1313_ww1brf.jpg",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783974079/IMG_1314_rpducc.jpg",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783974080/IMG_1328_jcr6an.jpg",
+            "/media/word-link/shot-1.jpg",
+            "/media/word-link/shot-2.jpg",
+            "/media/word-link/shot-3.jpg",
+            "/media/word-link/shot-4.jpg",
           ]
         },
         {
@@ -147,12 +144,12 @@ Developed a custom level editor to support the creation of varied level layouts 
 
 The game features strategic deck management, streak-based scoring, Wild Cards, and level objectives designed to create varied gameplay challenges.`,
           icon: "/AppIcons/AppIcon_TripeakSolitaire.png",
-          videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1783975409/ScreenRecording_06-27-2026_21-49-38_1_lnvqtq.mp4",
+          videoUrl: "/media/tripeaks-solitaire/gameplay.mp4",
           screenshots: [
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975335/IMG_1372_ibv3ar.jpg",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975333/IMG_1373_yyhmdb.jpg",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975333/IMG_1376_l95urm.jpg",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975333/IMG_1375_chntv4.jpg",
+            "/media/tripeaks-solitaire/shot-1.jpg",
+            "/media/tripeaks-solitaire/shot-2.jpg",
+            "/media/tripeaks-solitaire/shot-3.jpg",
+            "/media/tripeaks-solitaire/shot-4.jpg",
           ]
         },
         {
@@ -161,12 +158,12 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
           
           Developed a configurable shape spawn system to control incoming shape types, spawn patterns, and gameplay difficulty.`,
           icon: "/AppIcons/AppIcon_ShapeMerge.png",
-          videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1783975803/ScreenRecording_04-16-2026_21-45-47_1_nqkxtw.mp4",
+          videoUrl: "/media/shape-merge/gameplay.mp4",
           screenshots: [
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975724/IMG_0609_tkqibt.png",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975724/IMG_0608_ehdlos.png",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975724/IMG_0611_ogvbmb.png",
-            "https://res.cloudinary.com/doqo4xc6/image/upload/v1783975724/IMG_0610_fpxamr.png",
+            "/media/shape-merge/shot-1.webp",
+            "/media/shape-merge/shot-2.webp",
+            "/media/shape-merge/shot-3.webp",
+            "/media/shape-merge/shot-4.webp",
           ]
         }
       ],
@@ -184,54 +181,54 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
       title: "Raft Adventure 3D",
       subtitle: "Survival Adventure Game",
       description: "Survive on a raft in the middle of the ocean! Collect resources, build your raft, and explore mysterious islands in this immersive 3D survival adventure.",
-      icon: "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/fish-hunter_boelnf.webp",
+      icon: "/media/raft-adventure-3d/icon.webp",
       screenshots: [
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/51881d1f1c37ec8d8dbf900f875783ec_oh7hs3.png",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/1825c158f2a04712bd1c44d2631a25a8_esle5b.webp",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/58da917b389031b84adbbef2ca7caa95_lwkn9i.png",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784142361/fbc7f48b222f8e01b94c36d5cc5fa7dd_vnkhge.png"
+        "/media/raft-adventure-3d/shot-1.webp",
+        "/media/raft-adventure-3d/shot-2.webp",
+        "/media/raft-adventure-3d/shot-3.webp",
+        "/media/raft-adventure-3d/shot-4.webp"
       ],
-      videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1784142396/RaftAdventure3D_uxiflr.mp4",
+      videoUrl: "/media/raft-adventure-3d/gameplay.mp4",
       iosLink: "https://apps.apple.com/us/app/fish-hunter-sea-adventure/id1665911252"
     },
     {
       title: "Dive Seeker",
       subtitle: "Underwater Exploration",
       description: "Explore the depths of the ocean in this breathtaking underwater adventure. Discover treasures, mysterious sea creatures, and hidden secrets of the deep.",
-      icon: "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141412/DiveSeeker_Icon_imgupscaler.ai_General_2K-min-min_n7bsyn.jpg",
+      icon: "/media/dive-seeker/icon.webp",
       screenshots: [
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141412/DiveSeeker_2_imgupscaler.ai_General_2K-min-min_unu6aj.jpg",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141412/DiveSeeker_5_imgupscaler.ai_General_2K-min-min_egszv8.jpg",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141413/DiveSeeker_4_imgupscaler.ai_General_2K-min-min_m7xudl.jpg",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784141412/DiveSeeker_6_imgupscaler.ai_General_2K-min-min_rlfdck.jpg"
+        "/media/dive-seeker/shot-1.jpg",
+        "/media/dive-seeker/shot-2.jpg",
+        "/media/dive-seeker/shot-3.jpg",
+        "/media/dive-seeker/shot-4.jpg"
       ],
-      videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1784141812/movie_033_a64vea.mp4"
+      videoUrl: "/media/dive-seeker/gameplay.mp4"
     },
     {
       title: "Fashion Cash",
       subtitle: "Business Simulation",
       description: "Build your fashion empire from the ground up! Design trendy clothes, manage your boutique, and become the ultimate fashion mogul in this addictive business sim.",
-      icon: "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCashIcon_agluht.webp",
+      icon: "/media/fashion-cash/icon.webp",
       screenshots: [
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCash1_kttx2q.png",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCash3_mki8zk.png",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCash4_gy8k2m.png",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061433/FashionCash5_lwvz2e.png"
+        "/media/fashion-cash/shot-1.webp",
+        "/media/fashion-cash/shot-2.webp",
+        "/media/fashion-cash/shot-3.webp",
+        "/media/fashion-cash/shot-4.webp"
       ],
-      videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1784061451/FashionCashVideoCompressed_v9bztu.mp4"
+      videoUrl: "/media/fashion-cash/gameplay.mp4"
     },
     {
       title: "Potato Town",
       subtitle: "City Building & Management",
       description: "Build and manage your own potato-themed town! Grow crops, construct buildings, and create a thriving community in this charming city-building adventure.",
-      icon: "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownIcon_twklws.jpg",
+      icon: "/media/potato-town/icon.webp",
       screenshots: [
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownImage3_xqzawa.png",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownImage6_agaaxu.png",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownImage7_jcqlue.png",
-        "https://res.cloudinary.com/doqo4xc6/image/upload/v1784061067/PotatoTownImage4_rhijbn.png"
+        "/media/potato-town/shot-1.webp",
+        "/media/potato-town/shot-2.webp",
+        "/media/potato-town/shot-3.webp",
+        "/media/potato-town/shot-4.webp"
       ],
-      videoUrl: "https://res.cloudinary.com/doqo4xc6/video/upload/v1784061108/Potato_Town_Video_eot5hr.mp4"
+      videoUrl: "/media/potato-town/gameplay.mp4"
     }
   ];
 
@@ -258,6 +255,15 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
 
   const openLightbox = (type: 'video' | 'image', src: string, title: string) => {
     setLightboxMedia({ type, src, title });
+  };
+
+  // Start the lightbox video right away; if the browser blocks autoplay with sound, fall back to muted
+  const startPlayback = (video: HTMLVideoElement | null) => {
+    if (!video) return;
+    video.play().catch(() => {
+      video.muted = true;
+      video.play().catch(() => {});
+    });
   };
 
   const closeLightbox = () => {
@@ -293,7 +299,6 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
             <div className="relative overflow-hidden rounded-lg">
               <LazyVideo
                 src={videoUrl}
-                width={480}
                 className="w-full aspect-[8/16]"
               />
             </div>
@@ -309,7 +314,7 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
             <div className="relative bg-zinc-800/50 rounded-xl p-0.5 group-hover/media:ring-1 group-hover/media:ring-amber-500/30 transition-all duration-200">
               <div className="relative overflow-hidden rounded-xl">
                 <img
-                  src={optimizeImage(screenshot, 'f_auto,q_auto,w_400')}
+                  src={thumbOf(screenshot)}
                   alt={`${title} Screenshot ${screenshotIndex + 1}`}
                   className="w-full aspect-[8/16] object-cover"
                   loading="lazy"
@@ -396,7 +401,7 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
                     >
                       <div className="flex items-center gap-2.5 mb-3 px-0.5">
                         <img
-                          src={optimizeImage(game.icon, 'f_auto,q_auto,w_80')}
+                          src={game.icon}
                           alt={game.title}
                           className="w-9 h-9 object-cover shadow-md flex-shrink-0"
                           loading="lazy"
@@ -411,7 +416,6 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
                       <div className="relative overflow-hidden rounded-2xl border border-[var(--border-card)] bg-zinc-900/40 shadow-lg transition-all duration-300 group-hover/ov:border-amber-500/40 group-hover/ov:shadow-xl group-hover/ov:-translate-y-1">
                         <LazyVideo
                           src={game.videoUrl}
-                          width={360}
                           className="w-full aspect-[9/16]"
                         />
 
@@ -453,7 +457,7 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
                         <div className="flex items-center justify-center gap-4 mb-4">
                           <div className="relative">
                             <img
-                              src={optimizeImage(project.icon, 'f_auto,q_auto,w_160')}
+                              src={project.icon}
                               alt={project.title}
                               className="w-16 h-16 object-cover shadow-2xl"
                               loading="lazy"
@@ -512,7 +516,7 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
                                   <div className="flex items-center justify-center gap-4 mb-4">
                                     <div className="relative">
                                       <img
-                                        src={optimizeImage(subGame.icon, 'f_auto,q_auto,w_160')}
+                                        src={subGame.icon}
                                         alt={subGame.title}
                                         className="w-16 h-16 object-cover shadow-lg"
                                         loading="lazy"
@@ -567,19 +571,21 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
               {lightboxMedia.type === 'video' ? (
                 <video
                   key={lightboxMedia.src}
+                  ref={startPlayback}
                   className="max-w-full max-h-[80vh] w-auto h-auto"
                   controls
-                  preload="metadata"
+                  autoPlay
+                  preload="auto"
                   playsInline
                 >
                   <source
-                    src={optimizeVideo(lightboxMedia.src, 1080)}
+                    src={lightboxMedia.src}
                     type={lightboxMedia.src.toLowerCase().includes('.mov') ? 'video/quicktime' : 'video/mp4'}
                   />
                 </video>
               ) : (
                 <img
-                  src={optimizeImage(lightboxMedia.src, 'f_auto,q_auto,w_1280')}
+                  src={lightboxMedia.src}
                   alt={lightboxMedia.title}
                   className="max-w-full max-h-[80vh] w-auto h-auto object-contain"
                   loading="lazy"
