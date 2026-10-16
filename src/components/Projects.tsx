@@ -2,6 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { X, Play, ChevronLeft, ChevronRight } from 'lucide-react';
 import LazyVideo from './LazyVideo';
 
+// Cards play a light 8s loop (preview.mp4 + preview.webp poster); the full gameplay.mp4 opens in the lightbox.
+const previewOf = (videoUrl: string) => videoUrl.replace(/gameplay\.mp4$/, 'preview.mp4');
+const posterOf = (videoUrl: string) => videoUrl.replace(/gameplay\.mp4$/, 'preview.webp');
+
 // Every local screenshot /media/<game>/shot-N.<ext> has a 480px grid version shot-N-thumb.webp.
 // The full-size file is only loaded in the lightbox.
 const thumbOf = (url: string) =>
@@ -13,7 +17,7 @@ interface Project {
   description: string;
   icon: string;
   screenshots?: string[];
-  videoUrl: string;
+  videoUrl?: string;
   iosLink?: string;
   androidLink?: string;
   subGames?: {
@@ -25,6 +29,8 @@ interface Project {
   }[];
 }
 
+type SubGame = NonNullable<Project['subGames']>[number];
+
 const Projects = () => {
   const [lightboxMedia, setLightboxMedia] = useState<{ type: 'video' | 'image', src: string, title: string } | null>(null);
 
@@ -33,7 +39,7 @@ const Projects = () => {
       title: "Spark Win Cash",
       subtitle: "Skill-based Real Money Game",
       description: "A comprehensive gaming platform featuring multiple skill-based games where players can compete and win real money. Each game offers unique challenges and strategic gameplay.",
-      icon: "/AppIcons/AppIcon_Spark.png",
+      icon: "/AppIcons/Spark.webp",
       subGames: [
         {
           title: "Match-3 Puzzle",
@@ -41,7 +47,7 @@ const Projects = () => {
 
           The game features a variety of boosters, booster combinations, and obstacles that add strategic depth to gameplay.
           Developed an advanced level editor to support both manual level creation and configurable tile-generation systems for dynamically spawned incoming tiles.`,
-          icon: "/AppIcons/AppIcon_Match-3Puzzle.png",
+          icon: "/AppIcons/Match-3Puzzle.webp",
           videoUrl: "/media/match-3-puzzle/gameplay.mp4",
           screenshots: [
             "/media/match-3-puzzle/shot-1.webp",
@@ -57,7 +63,7 @@ const Projects = () => {
           The game features a variety of boosters, including Rocket, Bomb, and Rainbow, along with a Double Score power-up that enhances score-based gameplay.
 
           Level configuration system was developed to support flexible level creation and control gameplay parameters, generation rules, and difficulty.`,
-          icon: "/AppIcons/AppIcon_BubbleShooter.png",
+          icon: "/AppIcons/BubbleShooter.webp",
           videoUrl: "/media/bubble-shooter/gameplay.mp4",
           screenshots: [
             "/media/bubble-shooter/shot-1.webp",
@@ -71,7 +77,7 @@ const Projects = () => {
           description: `A classic 8 Ball Pool game where players aim to pocket their assigned set of balls before sinking the 8 ball to win the match.
 
 The game features realistic cue controls, ball physics and rule based win and foul conditions.`,
-          icon: "/AppIcons/AppIcon_8Ball.png",
+          icon: "/AppIcons/8Ball.webp",
           videoUrl: "/media/8-ball-pool/gameplay.mp4",
           screenshots: [
             "/media/8-ball-pool/shot-1.webp",
@@ -85,7 +91,7 @@ The game features realistic cue controls, ball physics and rule based win and fo
           description: `Blackjack inspired card puzzle game where players clear card stacks by reaching 21, building five-card hands without exceeding 21, and using Wild Blackjack Cards strategically.
 
 A custom deck generator was developed to create balanced deck layouts that support engaging gameplay, controlled difficulty progression, and varied level experiences.`,
-          icon: "/AppIcons/AppIcon_Blackjack.png",
+          icon: "/AppIcons/Blackjack.webp",
           videoUrl: "/media/blackjack-21/gameplay.mp4",
           screenshots: [
             "/media/blackjack-21/shot-1.webp",
@@ -101,7 +107,7 @@ A custom deck generator was developed to create balanced deck layouts that suppo
 The game features multiple block mechanics, including dual-color blocks, Ice Blocks, and blocks restricted to movement along a single axis.
 
 Developed a custom level editor to support the creation of varied level layouts and puzzle configurations.`,
-          icon: "/AppIcons/AppIcon_ColorBlocks.png",
+          icon: "/AppIcons/ColorBlocks.webp",
           videoUrl: "/media/color-blocks/gameplay.mp4",
           screenshots: [
             "/media/color-blocks/shot-1.webp",
@@ -115,7 +121,7 @@ Developed a custom level editor to support the creation of varied level layouts 
           description: `Number connection puzzle game where players link tiles with matching values to create long chains and reach higher numbers.
 
           Developed a configurable tile generation system to control incoming tile patterns, values, and gameplay difficulty.`,
-          icon: "/AppIcons/AppIcon_Link2248.png",
+          icon: "/AppIcons/Link2248.webp",
           videoUrl: "/media/2248/gameplay.mp4",
           screenshots: [
             "/media/2248/shot-1.webp",
@@ -129,7 +135,7 @@ Developed a custom level editor to support the creation of varied level layouts 
           description: `Word puzzle game where players connect letters to form words and complete crossword-style grids.
 
           Developed a custom editor that supports both manual level creation and automatic level generation based on a word dataset.`,
-          icon: "/AppIcons/AppIcon_WordLink.png",
+          icon: "/AppIcons/WordLink.webp",
           videoUrl: "/media/word-link/gameplay.mp4",
           screenshots: [
             "/media/word-link/shot-1.jpg",
@@ -143,7 +149,7 @@ Developed a custom level editor to support the creation of varied level layouts 
           description: `TriPeaks Solitaire game where players clear the board by selecting cards one value higher or lower than the current card.
 
 The game features strategic deck management, streak-based scoring, Wild Cards, and level objectives designed to create varied gameplay challenges.`,
-          icon: "/AppIcons/AppIcon_TripeakSolitaire.png",
+          icon: "/AppIcons/TripeakSolitaire.webp",
           videoUrl: "/media/tripeaks-solitaire/gameplay.mp4",
           screenshots: [
             "/media/tripeaks-solitaire/shot-1.jpg",
@@ -157,7 +163,7 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
           description: `Shape merging puzzle game where players combine matching shapes to create higher level forms and reach the maximum shape level.
           
           Developed a configurable shape spawn system to control incoming shape types, spawn patterns, and gameplay difficulty.`,
-          icon: "/AppIcons/AppIcon_ShapeMerge.png",
+          icon: "/AppIcons/ShapeMerge.webp",
           videoUrl: "/media/shape-merge/gameplay.mp4",
           screenshots: [
             "/media/shape-merge/shot-1.webp",
@@ -167,14 +173,6 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
           ]
         }
       ],
-      screenshots: [
-        "https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=300&h=600",
-        "https://images.pexels.com/photos/163064/play-stone-network-networked-interactive-163064.jpeg?auto=compress&cs=tinysrgb&w=300&h=600",
-        "https://images.pexels.com/photos/735911/pexels-photo-735911.jpeg?auto=compress&cs=tinysrgb&w=300&h=600",
-        "https://images.pexels.com/photos/1670977/pexels-photo-1670977.jpeg?auto=compress&cs=tinysrgb&w=300&h=600",
-        "https://images.pexels.com/photos/442576/pexels-photo-442576.jpeg?auto=compress&cs=tinysrgb&w=300&h=600"
-      ],
-      videoUrl: "/videos/spark-win-cash.mp4",
       iosLink: "https://apps.apple.com/us/app/spark-win-cash/id6670211183"
     },
     {
@@ -241,7 +239,9 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
           icon: sub.icon,
           videoUrl: sub.videoUrl,
         }))
-      : [{ title: project.title, icon: project.icon, videoUrl: project.videoUrl }]
+      : project.videoUrl
+        ? [{ title: project.title, icon: project.icon, videoUrl: project.videoUrl }]
+        : []
   );
 
   const overviewRef = useRef<HTMLDivElement>(null);
@@ -284,10 +284,10 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
     };
   }, [lightboxMedia]);
 
-  const renderMediaGrid = (project: any, subGame?: any) => {
-    const videoUrl = subGame?.videoUrl || project.videoUrl;
-    const screenshots = subGame?.screenshots || project.screenshots;
-    const title = subGame?.title || project.title;
+  const renderMediaGrid = (project: Project, subGame?: SubGame) => {
+    const videoUrl = subGame?.videoUrl ?? project.videoUrl ?? '';
+    const screenshots = subGame?.screenshots ?? project.screenshots ?? [];
+    const title = subGame?.title ?? project.title;
 
     return (
       <div className="flex flex-wrap justify-center gap-4">
@@ -298,7 +298,8 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
           <div className="relative bg-zinc-800/50 rounded-xl p-0.5 group-hover/media:ring-1 group-hover/media:ring-amber-500/30 transition-all duration-300">
             <div className="relative overflow-hidden rounded-lg">
               <LazyVideo
-                src={videoUrl}
+                src={previewOf(videoUrl)}
+                poster={posterOf(videoUrl)}
                 className="w-full aspect-[8/16]"
               />
             </div>
@@ -415,7 +416,8 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
 
                       <div className="relative overflow-hidden rounded-2xl border border-[var(--border-card)] bg-zinc-900/40 shadow-lg transition-all duration-300 group-hover/ov:border-amber-500/40 group-hover/ov:shadow-xl group-hover/ov:-translate-y-1">
                         <LazyVideo
-                          src={game.videoUrl}
+                          src={previewOf(game.videoUrl)}
+                          poster={posterOf(game.videoUrl)}
                           className="w-full aspect-[9/16]"
                         />
 

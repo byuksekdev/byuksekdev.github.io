@@ -1,4 +1,3 @@
-import React from 'react';
 import { FileText, Linkedin, Github, Mail } from 'lucide-react';
 
 const About = () => {
@@ -44,7 +43,7 @@ const About = () => {
               <div className="relative group">
                 <div className="w-44 h-44 sm:w-52 sm:h-52 md:w-56 md:h-56 rounded-full overflow-hidden shadow-2xl">
                   <img
-                    src="/profile.jpeg"
+                    src="/profile.webp"
                     alt="Burak Yuksek"
                     className="w-full h-full object-cover"
                     loading="eager"
@@ -75,7 +74,7 @@ const About = () => {
                 </div>
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap">
                 {aboutLinks.map((link, index) => (
                   <a
                     key={index}

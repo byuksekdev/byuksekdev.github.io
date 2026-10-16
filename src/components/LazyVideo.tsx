@@ -10,10 +10,6 @@ interface LazyVideoProps {
 const inferType = (src: string) =>
   src.toLowerCase().includes('.mov') ? 'video/quicktime' : 'video/mp4';
 
-// /media/<oyun>/gameplay.mp4 videolarının ilk karesi aynı klasörde poster.webp olarak durur.
-export const videoPoster = (url: string): string | undefined =>
-  url.startsWith('/media/') ? url.replace(/[^/]+\.mp4$/i, 'poster.webp') : undefined;
-
 const LazyVideo: React.FC<LazyVideoProps> = ({
   src,
   poster,
@@ -21,7 +17,6 @@ const LazyVideo: React.FC<LazyVideoProps> = ({
   type,
 }) => {
   const sourceType = type ?? inferType(src);
-  const resolvedPoster = poster ?? videoPoster(src);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
@@ -78,7 +73,7 @@ const LazyVideo: React.FC<LazyVideoProps> = ({
       <video
         ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
-        poster={resolvedPoster}
+        poster={poster}
         muted
         loop
         playsInline

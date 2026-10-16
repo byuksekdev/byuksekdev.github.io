@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Navigation from './components/Navigation';
 import About from './components/About';
 import Projects from './components/Projects';

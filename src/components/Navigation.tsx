@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Menu, X } from "lucide-react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Github, Linkedin, Mail, Menu, X } from "lucide-react";
 
 const LINKS = [
   { id: "about", label: "About Me" },
@@ -7,49 +7,51 @@ const LINKS = [
   { id: "contact", label: "Contact" },
 ];
 
-// Fade behaviour settings
-const FADE_DISTANCE = 220;     // pixels until close-to-full opacity
-const MAX_BG_OPACITY = 0.70;   // maximum opacity for zinc-900
+const SOCIALS = [
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/burak-yuksek/", Icon: Linkedin },
+  { label: "GitHub", href: "https://github.com/burakyu", Icon: Github },
+  { label: "Email", href: "mailto:burakyuksek572@gmail.com", Icon: Mail },
+];
 
-const clamp = (n: number, min: number, max: number) => Math.max(min, Math.min(max, n));
+// The capsule firms up (denser glass, shadow) once the page is scrolled past this many pixels
+const SCROLLED_AT = 24;
 
 const Navigation: React.FC = () => {
-  const [scrollY, setScrollY] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeId, setActiveId] = useState<string>(LINKS[0].id);
   const drawerRef = useRef<HTMLDivElement>(null);
   const firstFocusRef = useRef<HTMLAnchorElement>(null);
-  const rafRef = useRef<number>();
+  const progressRef = useRef<HTMLDivElement>(null);
+  const linksRef = useRef<HTMLUListElement>(null);
+  const [indicator, setIndicator] = useState<{ left: number; width: number } | null>(null);
 
-  // Optimized scroll handling with throttling
+  // Scroll progress is written straight to the DOM, so the nav only re-renders when "scrolled" flips
   useEffect(() => {
-    const onScroll = () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const doc = document.documentElement;
+      const max = doc.scrollHeight - doc.clientHeight;
+      if (progressRef.current) {
+        progressRef.current.style.transform = `scaleX(${max > 0 ? Math.min(window.scrollY / max, 1) : 0})`;
       }
-      
-      rafRef.current = requestAnimationFrame(() => {
-        setScrollY(window.scrollY);
-      });
+      setScrolled(window.scrollY > SCROLLED_AT);
     };
-    
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    
+    window.addEventListener("resize", onScroll);
+    update();
+
     return () => {
       window.removeEventListener("scroll", onScroll);
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-      }
+      window.removeEventListener("resize", onScroll);
+      if (raf) cancelAnimationFrame(raf);
     };
   }, []);
-
-  // Calculate progress from scrollY
-  const progress = useMemo(() => {
-    const doc = document.documentElement;
-    const maxScroll = doc.scrollHeight - doc.clientHeight;
-    return maxScroll > 0 ? Math.min((scrollY / maxScroll) * 100, 100) : 0;
-  }, [scrollY]);
 
   // Active section highlight
   useEffect(() => {
@@ -97,6 +99,18 @@ const Navigation: React.FC = () => {
     return () => obs.disconnect();
   }, []);
 
+  // Sliding highlight behind the active link
+  useLayoutEffect(() => {
+    const measure = () => {
+      // Measure the <li>: its offsets are relative to the <ul>, which the highlight is positioned in
+      const item = linksRef.current?.querySelector<HTMLElement>(`a[href="#${activeId}"]`)?.closest("li");
+      if (item) setIndicator({ left: item.offsetLeft, width: item.offsetWidth });
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [activeId]);
+
   // Mobile drawer: ESC, focus trap, body scroll lock
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -140,6 +154,8 @@ const Navigation: React.FC = () => {
     e.preventDefault();
     const el = document.getElementById(id);
     if (!el) return;
+    // Release the mobile drawer's scroll lock first, otherwise the scroll is ignored
+    document.documentElement.classList.remove("overflow-hidden");
     smoothScrollTo(el);
     history.replaceState(null, "", `#${id}`);
     setMobileOpen(false);
@@ -151,29 +167,9 @@ const Navigation: React.FC = () => {
     setMobileOpen(false);
   };
 
-  // Calculate background opacity (zinc-900 rgba)
-  const t = clamp(scrollY / FADE_DISTANCE, 0, 1);
-  const bgOpacity = +(t * MAX_BG_OPACITY).toFixed(3); // stabilize
-  const showShadow = t > 0.15;
-  const showBorder = t > 0.35;
-
-  // Class names
-  const navClass = useMemo(
-    () =>
-      [
-        "fixed top-0 left-0 right-0 z-[60] transition-[background-color,transform,box-shadow,border-color] duration-300",
-        "supports-[backdrop-filter]:backdrop-blur-md",
-        showShadow ? "shadow-lg" : "shadow-none",
-        showBorder ? "border-b border-white/10" : "border-b border-transparent",
-      ].join(" "),
-    [showShadow, showBorder]
-  );
-
-  const linkBase =
-    "relative font-medium px-1 py-0.5 rounded text-[var(--text-secondary)] hover:text-[var(--text-primary)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]";
-  const underline =
-    "after:absolute after:left-0 after:right-0 after:-bottom-[6px] after:h-0.5 after:rounded-full after:bg-[var(--accent)] after:origin-left after:scale-x-0 after:transition-transform after:duration-300";
-  const underlineActive = "after:scale-x-100";
+  const glass = scrolled
+    ? "bg-[rgba(var(--nav-bg-rgb),0.72)] border-white/[0.09] shadow-[0_12px_40px_-12px_rgba(0,0,0,0.65)]"
+    : "bg-[rgba(var(--nav-bg-rgb),0.35)] border-white/[0.06] shadow-none";
 
   return (
     <>
@@ -182,21 +178,12 @@ const Navigation: React.FC = () => {
         aria-hidden={!mobileOpen}
         tabIndex={-1}
         onClick={() => setMobileOpen(false)}
-        className={`fixed inset-0 z-50 bg-black/20 transition-opacity ${mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 z-50 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 md:hidden ${mobileOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
       />
-      <header
-        className={navClass}
-        style={{
-          backgroundColor: `rgba(var(--nav-bg-rgb),${bgOpacity})`,
-        }}
-      >
-        {/* Progress bar */}
-        <div
-          className="absolute top-0 left-0 h-0.5 bg-[var(--accent)] progress-bar"
-          style={{ width: `${progress}%` }}
-          aria-hidden
-        />
 
+      <header
+        className={`fixed inset-x-0 top-0 z-[60] px-3 sm:px-4 transition-[padding] duration-500 ${scrolled ? "pt-2.5" : "pt-4"}`}
+      >
         {/* Skip link */}
         <a
           href="#main"
@@ -205,39 +192,55 @@ const Navigation: React.FC = () => {
           Skip to content
         </a>
 
-        <nav aria-label="Primary" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-safe">
-          <div className="flex h-16 items-center justify-between">
+        <nav aria-label="Primary" className="max-w-6xl mx-auto">
+          {/* Capsule */}
+          <div
+            className={`liquid-glass relative grid h-14 grid-cols-[1fr_auto] md:grid-cols-[1fr_auto_1fr] items-center rounded-full border pl-2.5 pr-2 transition-[background-color,border-color,box-shadow] duration-500 ${glass}`}
+          >
             {/* Brand */}
             <button
               onClick={toTop}
-              className="flex items-center gap-2 group focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 rounded"
+              className="justify-self-start flex items-center gap-2.5 group rounded-full pr-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
               aria-label="Scroll to top"
             >
-              <div className="w-9 h-9 rounded-xl overflow-hidden flex items-center justify-center ring-1 ring-white/10 group-hover:scale-110 transition-transform duration-300">
+              <div className="w-9 h-9 rounded-full overflow-hidden flex items-center justify-center ring-1 ring-white/15 shadow-md group-hover:rotate-[-10deg] transition-transform duration-500">
                 <img
-                  src="/BY.png"
+                  src="/BY.webp"
                   alt="Burak Yüksek logo"
+                  width={36}
+                  height={36}
                   className="w-full h-full object-cover"
                   loading="eager"
                   decoding="async"
                 />
               </div>
-              <span className="text-xl font-extrabold tracking-tight text-[var(--text-primary)]">
+              <span className="text-lg font-extrabold tracking-tight text-[var(--text-primary)]">
                 Burak <span className="text-[var(--accent)]">Yüksek</span>
               </span>
             </button>
 
-            {/* Desktop links */}
-            <ul className="hidden md:flex items-center gap-8">
+            {/* Desktop links with a sliding highlight */}
+            <ul ref={linksRef} className="relative hidden md:flex items-center gap-1 rounded-full bg-white/[0.035] p-1 ring-1 ring-inset ring-white/[0.06]">
+              {indicator && (
+                <span
+                  aria-hidden
+                  className="absolute top-1 bottom-1 rounded-full bg-white/[0.09] ring-1 ring-inset ring-white/[0.08] shadow-[0_1px_0_rgba(255,255,255,0.06)_inset] transition-[left,width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+                  style={{ left: indicator.left, width: indicator.width }}
+                >
+                  <span className="absolute -bottom-px left-1/2 h-px w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-amber-400 to-transparent" />
+                </span>
+              )}
               {LINKS.map((l) => {
                 const isActive = activeId === l.id;
                 return (
-                  <li key={l.id}>
+                  <li key={l.id} className="relative z-[1]">
                     <a
                       href={`#${l.id}`}
                       onClick={handleAnchorClick(l.id)}
-                      className={`${linkBase} ${underline} ${isActive ? underlineActive : ""}`}
                       aria-current={isActive ? "page" : undefined}
+                      className={`block rounded-full px-4 py-1.5 text-sm font-medium transition-colors duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                        isActive ? "text-white" : "text-white/55 hover:text-white"
+                      }`}
                     >
                       {l.label}
                     </a>
@@ -246,17 +249,38 @@ const Navigation: React.FC = () => {
               })}
             </ul>
 
-            {/* Mobile button */}
-            <div className="md:hidden">
+            {/* Right: socials (desktop) / menu button (mobile) */}
+            <div className="justify-self-end flex items-center gap-1">
+              {SOCIALS.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel="noopener noreferrer"
+                  aria-label={label}
+                  className="hidden md:flex w-9 h-9 items-center justify-center rounded-full text-white/55 transition-colors duration-300 hover:text-[var(--accent)] hover:bg-white/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                >
+                  <Icon className="w-[18px] h-[18px]" />
+                </a>
+              ))}
               <button
                 onClick={() => setMobileOpen((v) => !v)}
                 aria-expanded={mobileOpen}
                 aria-controls="mobile-menu"
-                className="p-2 rounded-lg transition-colors duration-200 text-white/90 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                className="md:hidden flex w-10 h-10 items-center justify-center rounded-full bg-white/[0.05] ring-1 ring-inset ring-white/[0.08] text-white/90 transition-colors duration-200 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                 aria-label="Toggle navigation"
               >
-                {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
+            </div>
+
+            {/* Scroll progress: a glow on the capsule's bottom edge that grows outward from the center */}
+            <div className="pointer-events-none absolute inset-x-10 -bottom-px h-px" aria-hidden>
+              <div
+                ref={progressRef}
+                className="h-full origin-center bg-gradient-to-r from-transparent via-amber-400 to-transparent"
+                style={{ transform: "scaleX(0)" }}
+              />
             </div>
           </div>
 
@@ -264,50 +288,58 @@ const Navigation: React.FC = () => {
           <div
             id="mobile-menu"
             ref={drawerRef}
-            className={`md:hidden overflow-hidden transition-[max-height,opacity,transform] duration-300 ${
-              mobileOpen ? "max-h-96 opacity-100 translate-y-0" : "max-h-0 opacity-0 -translate-y-2"
+            className={`md:hidden origin-top transition-[opacity,transform] duration-300 ease-out ${
+              mobileOpen ? "opacity-100 translate-y-0 scale-100" : "pointer-events-none opacity-0 -translate-y-2 scale-[0.98]"
             }`}
           >
-            <ul className="mt-2 rounded-2xl p-2 bg-[rgba(var(--nav-bg-rgb),0.96)] supports-[backdrop-filter]:backdrop-blur-md shadow-xl ring-1 ring-black/10">
-              {LINKS.map((l, idx) => {
-                const isActive = activeId === l.id;
-                const item =
-                  "block w-full text-left px-4 py-3 rounded-xl text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]";
-                return (
-                  <li key={l.id}>
-                    <a
-                      ref={idx === 0 ? firstFocusRef : undefined}
-                      href={`#${l.id}`}
-                      onClick={handleAnchorClick(l.id)}
-                      className={`${item} ${isActive ? "bg-white/10" : ""}`}
-                      aria-current={isActive ? "page" : undefined}
-                    >
-                      {l.label}
-                    </a>
-                  </li>
-                );
-              })}
-              <li className="flex justify-end px-2">
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="mt-1 inline-flex items-center gap-2 px-4 py-2 rounded-lg text-[var(--text-secondary)] hover:bg-black/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
-                  aria-label="Close menu"
-                >
-                  <X className="w-4 h-4" />
-                  Close
-                </button>
-              </li>
-            </ul>
+            <div className="liquid-glass mt-2 rounded-3xl border border-white/[0.09] bg-[rgba(var(--nav-bg-rgb),0.92)] p-2 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.8)]">
+              <ul>
+                {LINKS.map((l, idx) => {
+                  const isActive = activeId === l.id;
+                  return (
+                    <li key={l.id}>
+                      <a
+                        ref={idx === 0 ? firstFocusRef : undefined}
+                        href={`#${l.id}`}
+                        onClick={handleAnchorClick(l.id)}
+                        tabIndex={mobileOpen ? 0 : -1}
+                        aria-current={isActive ? "page" : undefined}
+                        className={`flex items-center justify-between rounded-2xl px-4 py-3.5 text-base font-medium transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] ${
+                          isActive ? "bg-white/[0.08] text-white" : "text-white/65 hover:bg-white/[0.04] hover:text-white"
+                        }`}
+                      >
+                        {l.label}
+                        {isActive && <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent)]" aria-hidden />}
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="mt-2 flex items-center justify-center gap-2 border-t border-white/[0.06] pt-3 pb-1">
+                {SOCIALS.map(({ label, href, Icon }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target={href.startsWith("http") ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    tabIndex={mobileOpen ? 0 : -1}
+                    className="flex w-11 h-11 items-center justify-center rounded-full bg-white/[0.04] ring-1 ring-inset ring-white/[0.07] text-white/70 transition-colors duration-300 hover:text-[var(--accent)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)]"
+                  >
+                    <Icon className="w-[18px] h-[18px]" />
+                  </a>
+                ))}
+              </div>
+            </div>
           </div>
         </nav>
 
-        {/* Reduced motion + safe area */}
+        {/* Reduced motion */}
         <style>{`
           @media (prefers-reduced-motion: reduce) {
             .transition-all, .transition-transform, .transition-colors,
             .duration-300, .duration-200 { transition: none !important; }
           }
-          .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
         `}</style>
       </header>
     </>
