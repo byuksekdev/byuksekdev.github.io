@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
-import { X, Play, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { X, Play } from 'lucide-react';
 import LazyVideo from './LazyVideo';
 
 // Cards play a light 8s loop (preview.mp4 + preview.webp poster); the full gameplay.mp4 opens in the lightbox.
@@ -87,6 +87,48 @@ The game features realistic cue controls, ball physics and rule based win and fo
           ]
         },
         {
+          title: "Can Smash",
+          description: `Physics-based arcade game where players fire balls from a cannon to knock down towering stacks of cans and blocks and clear the platform.
+
+Each level brings a new structure to topple, with a limited number of balls and a time bonus for clearing the stage quickly.`,
+          icon: "/AppIcons/CanSmash.webp",
+          videoUrl: "/media/can-smash/gameplay.mp4",
+          screenshots: [
+            "/media/can-smash/shot-1.webp",
+            "/media/can-smash/shot-2.webp",
+            "/media/can-smash/shot-3.webp",
+            "/media/can-smash/shot-4.webp",
+          ]
+        },
+        {
+          title: "Pixel Blast",
+          description: `Color-matching puzzle game where players send numbered shooters onto a conveyor track around a pixel-art picture. Each shooter blasts the pixels of its own color until the whole picture is cleared.
+
+Players decide which shooters to deploy and manage a limited number of track slots, with every level built around a new pixel-art image.`,
+          icon: "/AppIcons/PixelBlast.webp",
+          videoUrl: "/media/pixel-blast/gameplay.mp4",
+          screenshots: [
+            "/media/pixel-blast/shot-1.webp",
+            "/media/pixel-blast/shot-2.webp",
+            "/media/pixel-blast/shot-3.webp",
+            "/media/pixel-blast/shot-4.webp",
+          ]
+        },
+        {
+          title: "Rotate Rings",
+          description: `Color-matching puzzle game where players rotate interlocking rings and arcs to bring same-colored pieces together and clear them from the board.
+
+Levels mix different ring layouts and connectors, and clearing pieces in quick succession builds a score multiplier.`,
+          icon: "/AppIcons/RotateRings.webp",
+          videoUrl: "/media/rotate-rings/gameplay.mp4",
+          screenshots: [
+            "/media/rotate-rings/shot-1.webp",
+            "/media/rotate-rings/shot-2.webp",
+            "/media/rotate-rings/shot-3.webp",
+            "/media/rotate-rings/shot-4.webp",
+          ]
+        },
+        {
           title: "Blackjack 21",
           description: `Blackjack inspired card puzzle game where players clear card stacks by reaching 21, building five-card hands without exceeding 21, and using Wild Blackjack Cards strategically.
 
@@ -171,6 +213,20 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
             "/media/shape-merge/shot-3.webp",
             "/media/shape-merge/shot-4.webp",
           ]
+        },
+        {
+          title: "Word Search",
+          description: `Word search puzzle game where players swipe across a letter grid to find every word from a themed list, such as School, Jobs or Ocean.
+
+Words can run horizontally, vertically or diagonally, and finding them in quick succession builds a score multiplier.`,
+          icon: "/AppIcons/WordSearch.webp",
+          videoUrl: "/media/word-search/gameplay.mp4",
+          screenshots: [
+            "/media/word-search/shot-1.webp",
+            "/media/word-search/shot-2.webp",
+            "/media/word-search/shot-3.webp",
+            "/media/word-search/shot-4.webp",
+          ]
         }
       ],
       iosLink: "https://apps.apple.com/us/app/spark-win-cash/id6670211183"
@@ -244,14 +300,6 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
         : []
   );
 
-  const overviewRef = useRef<HTMLDivElement>(null);
-
-  const scrollOverview = (direction: 'left' | 'right') => {
-    const el = overviewRef.current;
-    if (!el) return;
-    const amount = el.clientWidth * 0.8;
-    el.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
-  };
 
   const openLightbox = (type: 'video' | 'image', src: string, title: string) => {
     setLightboxMedia({ type, src, title });
@@ -345,15 +393,9 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
 
           {/* ─── QUICK OVERVIEW ─── One video per game, horizontally scrollable */}
           <div className="mb-20 relative liquid-glass bg-[var(--bg-card)] rounded-3xl border border-[var(--border-card)] p-6 md:p-8">
-            {/* Header row: label + title on the left, scroll arrows on the right */}
-            <div className="flex items-end justify-between gap-4 mb-6">
+            {/* Header row */}
+            <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
               <div className="text-left">
-                {/* <div className="inline-flex items-center gap-2 mb-3">
-                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold tracking-wide bg-[var(--accent-bg)] text-[var(--accent)] border border-[var(--accent-border)]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] animate-pulse" />
-                    {overviewGames.length} GAMES
-                  </span>
-                </div>*/}
                 <h3 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)]">
                   Quick <span className="text-[var(--accent)]">Overview</span>
                 </h3>
@@ -361,85 +403,60 @@ The game features strategic deck management, streak-based scoring, Wild Cards, a
                   One clip from every game, tap any to watch full screen.
                 </p>
               </div>
-
-              <div className="hidden md:flex items-center gap-2 flex-shrink-0">
-                <button
-                  type="button"
-                  onClick={() => scrollOverview('left')}
-                  aria-label="Scroll left"
-                  className="flex items-center justify-center w-10 h-10 rounded-full border border-[var(--border-card)] bg-[var(--bg-card)] text-[var(--text-primary)] hover:text-[var(--accent)] hover:border-[var(--accent-border)] transition-colors duration-200"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => scrollOverview('right')}
-                  aria-label="Scroll right"
-                  className="flex items-center justify-center w-10 h-10 rounded-full border border-[var(--border-card)] bg-[var(--bg-card)] text-[var(--text-primary)] hover:text-[var(--accent)] hover:border-[var(--accent-border)] transition-colors duration-200"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
             </div>
 
-            {/* Scrollable strip + edge shadows (overflow hint) */}
-            <div className="relative">
-              {/* <div className="pointer-events-none absolute left-0 top-0 bottom-3 w-8 md:w-12 z-10 bg-gradient-to-r from-[var(--bg-page)] to-transparent rounded-l-2xl opacity-50" />
-              <div className="pointer-events-none absolute right-0 top-0 bottom-3 w-8 md:w-12 z-10 bg-gradient-to-l from-[var(--bg-page)] to-transparent rounded-r-2xl opacity-50" /> */}
+            {/* Grid on tablet/desktop (every game visible), swipeable strip on phones */}
+            <div className="overflow-x-auto overflow-y-hidden pb-3 snap-x snap-mandatory scroll-px-1 md:overflow-visible md:snap-none md:pb-0">
+              <div className="flex gap-4 w-max pl-4 pr-0.5 md:w-auto md:flex-wrap md:justify-center md:pl-0 md:pr-0 md:gap-x-4 md:gap-y-7 xl:gap-x-5">
+                {overviewGames.map((game, overviewIndex) => (
+                  <button
+                    key={overviewIndex}
+                    type="button"
+                    onClick={() => openLightbox('video', game.videoUrl, `${game.title} Gameplay`)}
+                    className="group/ov flex-shrink-0 w-40 snap-start text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-2xl md:w-[calc((100%-4*1rem)/5)] xl:w-[calc((100%-5*1.25rem)/6)]"
+                    aria-label={`${game.title} gameplay video`}
+                  >
+                    <div className="flex items-center gap-2 mb-2.5 px-0.5">
+                      <img
+                        src={game.icon}
+                        alt=""
+                        width={32}
+                        height={32}
+                        className="w-8 h-8 object-cover shadow-md flex-shrink-0"
+                        loading="lazy"
+                        decoding="async"
+                        style={{ borderRadius: '28%' }}
+                      />
+                      <span className="text-[13px] font-semibold leading-tight text-[var(--text-primary)] truncate">
+                        {game.title}
+                      </span>
+                    </div>
 
-              <div
-                ref={overviewRef}
-                className="overflow-x-auto overflow-y-hidden pb-3 snap-x snap-mandatory scroll-px-1"
-              >
-                <div className="flex gap-4 md:gap-5 w-max pl-4 md:pl-5 pr-0.5">
-                  {overviewGames.map((game, overviewIndex) => (
-                    <button
-                      key={overviewIndex}
-                      type="button"
-                      onClick={() => openLightbox('video', game.videoUrl, `${game.title} Gameplay`)}
-                      className="group/ov flex-shrink-0 w-40 md:w-48 snap-start text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-2xl"
-                      aria-label={`${game.title} gameplay video`}
-                    >
-                      <div className="flex items-center gap-2.5 mb-3 px-0.5">
-                        <img
-                          src={game.icon}
-                          alt={game.title}
-                          className="w-9 h-9 object-cover shadow-md flex-shrink-0"
-                          loading="lazy"
-                          decoding="async"
-                          style={{ borderRadius: '28%' }}
-                        />
-                        <span className="text-sm font-semibold text-[var(--text-primary)] truncate">
-                          {game.title}
+                    <div className="relative overflow-hidden rounded-2xl border border-[var(--border-card)] bg-zinc-900/40 shadow-lg transition-all duration-300 group-hover/ov:border-amber-500/40 group-hover/ov:shadow-xl group-hover/ov:-translate-y-1">
+                      <LazyVideo
+                        src={previewOf(game.videoUrl)}
+                        poster={posterOf(game.videoUrl)}
+                        className="w-full aspect-[9/16]"
+                      />
+
+                      {/* Bottom darkening — contrast for the "Watch" badge */}
+                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent" />
+
+                      {/* Always-visible small "Watch" badge — makes it clear this is a video */}
+                      <div className="absolute bottom-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded-full bg-black/55 backdrop-blur-sm transition-opacity duration-300 group-hover/ov:opacity-0">
+                        <Play className="w-3 h-3 text-white fill-white" />
+                        <span className="text-[10px] font-semibold tracking-wide text-white">WATCH</span>
+                      </div>
+
+                      {/* Highlighted play button centered on hover */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/25 opacity-0 group-hover/ov:opacity-100 transition-opacity duration-300">
+                        <span className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--accent)] shadow-lg shadow-amber-500/30">
+                          <Play className="w-5 h-5 text-black fill-black ml-0.5" />
                         </span>
                       </div>
-
-                      <div className="relative overflow-hidden rounded-2xl border border-[var(--border-card)] bg-zinc-900/40 shadow-lg transition-all duration-300 group-hover/ov:border-amber-500/40 group-hover/ov:shadow-xl group-hover/ov:-translate-y-1">
-                        <LazyVideo
-                          src={previewOf(game.videoUrl)}
-                          poster={posterOf(game.videoUrl)}
-                          className="w-full aspect-[9/16]"
-                        />
-
-                        {/* Bottom darkening — contrast for the "Watch" badge */}
-                        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent" />
-
-                        {/* Always-visible small "Watch" badge — makes it clear this is a video */}
-                        <div className="absolute bottom-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded-full bg-black/55 backdrop-blur-sm transition-opacity duration-300 group-hover/ov:opacity-0">
-                          <Play className="w-3 h-3 text-white fill-white" />
-                          <span className="text-[10px] font-semibold tracking-wide text-white">WATCH</span>
-                        </div>
-
-                        {/* Highlighted play button centered on hover */}
-                        <div className="absolute inset-0 flex items-center justify-center bg-black/25 opacity-0 group-hover/ov:opacity-100 transition-opacity duration-300">
-                          <span className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--accent)] shadow-lg shadow-amber-500/30">
-                            <Play className="w-5 h-5 text-black fill-black ml-0.5" />
-                          </span>
-                        </div>
-                      </div>
-                    </button>
-                  ))}
-                </div>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
 
