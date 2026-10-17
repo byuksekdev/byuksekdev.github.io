@@ -1,6 +1,5 @@
 User-agent: *
 Disallow: /
-Disallow: /p/
 
 User-agent: Googlebot
 Disallow: /

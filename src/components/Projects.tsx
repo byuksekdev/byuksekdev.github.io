@@ -1,15 +1,12 @@
-import { useState, useEffect } from 'react';
-import { X, Play } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { ChevronRight } from 'lucide-react';
 import LazyVideo from './LazyVideo';
+import GameDetail from './GameDetail';
+import type { GameEntry } from './GameDetail';
 
-// Cards play a light 8s loop (preview.mp4 + preview.webp poster); the full gameplay.mp4 opens in the lightbox.
+// Cards play a light 8s loop (preview.mp4 + preview.webp poster); the full gameplay.mp4 plays in the detail panel.
 const previewOf = (videoUrl: string) => videoUrl.replace(/gameplay\.mp4$/, 'preview.mp4');
 const posterOf = (videoUrl: string) => videoUrl.replace(/gameplay\.mp4$/, 'preview.webp');
-
-// Every local screenshot /media/<game>/shot-N.<ext> has a 480px grid version shot-N-thumb.webp.
-// The full-size file is only loaded in the lightbox.
-const thumbOf = (url: string) =>
-  url.startsWith('/media/') ? url.replace(/\.(webp|png|jpe?g)$/i, '-thumb.webp') : url;
 
 interface Project {
   title: string;
@@ -27,13 +24,18 @@ interface Project {
     videoUrl: string;
     screenshots: string[];
   }[];
+  /** In-app features of a platform (reward mini-games, offers, events). Video is optional. */
+  features?: {
+    title: string;
+    description: string;
+    icon: string;
+    videoUrl?: string;
+    extraVideos?: string[];
+    screenshots: string[];
+  }[];
 }
 
-type SubGame = NonNullable<Project['subGames']>[number];
-
 const Projects = () => {
-  const [lightboxMedia, setLightboxMedia] = useState<{ type: 'video' | 'image', src: string, title: string } | null>(null);
-
   const projects: Project[] = [
     {
       title: "Spark Win Cash",
@@ -54,36 +56,6 @@ const Projects = () => {
             "/media/match-3-puzzle/shot-2.webp",
             "/media/match-3-puzzle/shot-3.webp",
             "/media/match-3-puzzle/shot-4.webp",
-          ]
-        },
-        {
-          title: "Bubble Shooter",
-          description: `Bubble Shooter puzzle game where players shoot and match three or more bubbles of the same color to clear the board and complete level objectives.
-
-          The game features a variety of boosters, including Rocket, Bomb, and Rainbow, along with a Double Score power-up that enhances score-based gameplay.
-
-          Level configuration system was developed to support flexible level creation and control gameplay parameters, generation rules, and difficulty.`,
-          icon: "/AppIcons/BubbleShooter.webp",
-          videoUrl: "/media/bubble-shooter/gameplay.mp4",
-          screenshots: [
-            "/media/bubble-shooter/shot-1.webp",
-            "/media/bubble-shooter/shot-2.webp",
-            "/media/bubble-shooter/shot-3.webp",
-            "/media/bubble-shooter/shot-4.webp",
-          ]
-        },
-        {
-          title: "8 Ball Pool",
-          description: `A classic 8 Ball Pool game where players aim to pocket their assigned set of balls before sinking the 8 ball to win the match.
-
-The game features realistic cue controls, ball physics and rule based win and foul conditions.`,
-          icon: "/AppIcons/8Ball.webp",
-          videoUrl: "/media/8-ball-pool/gameplay.mp4",
-          screenshots: [
-            "/media/8-ball-pool/shot-1.webp",
-            "/media/8-ball-pool/shot-2.webp",
-            "/media/8-ball-pool/shot-3.webp",
-            "/media/8-ball-pool/shot-4.webp",
           ]
         },
         {
@@ -129,20 +101,6 @@ Levels mix different ring layouts and connectors, and clearing pieces in quick s
           ]
         },
         {
-          title: "Blackjack 21",
-          description: `Blackjack inspired card puzzle game where players clear card stacks by reaching 21, building five-card hands without exceeding 21, and using Wild Blackjack Cards strategically.
-
-A custom deck generator was developed to create balanced deck layouts that support engaging gameplay, controlled difficulty progression, and varied level experiences.`,
-          icon: "/AppIcons/Blackjack.webp",
-          videoUrl: "/media/blackjack-21/gameplay.mp4",
-          screenshots: [
-            "/media/blackjack-21/shot-1.webp",
-            "/media/blackjack-21/shot-2.webp",
-            "/media/blackjack-21/shot-3.webp",
-            "/media/blackjack-21/shot-4.webp",
-          ]
-        },
-        {
           title: "Color Blocks",
           description: `Color based puzzle game where players send colored blocks to their matching doors to clear the board and complete level objectives.
 
@@ -156,6 +114,50 @@ Developed a custom level editor to support the creation of varied level layouts 
             "/media/color-blocks/shot-2.webp",
             "/media/color-blocks/shot-3.webp",
             "/media/color-blocks/shot-4.webp",
+          ]
+        },
+        {
+          title: "Bubble Shooter",
+          description: `Bubble Shooter puzzle game where players shoot and match three or more bubbles of the same color to clear the board and complete level objectives.
+
+          The game features a variety of boosters, including Rocket, Bomb, and Rainbow, along with a Double Score power-up that enhances score-based gameplay.
+
+          Level configuration system was developed to support flexible level creation and control gameplay parameters, generation rules, and difficulty.`,
+          icon: "/AppIcons/BubbleShooter.webp",
+          videoUrl: "/media/bubble-shooter/gameplay.mp4",
+          screenshots: [
+            "/media/bubble-shooter/shot-1.webp",
+            "/media/bubble-shooter/shot-2.webp",
+            "/media/bubble-shooter/shot-3.webp",
+            "/media/bubble-shooter/shot-4.webp",
+          ]
+        },
+        {
+          title: "8 Ball Pool",
+          description: `A classic 8 Ball Pool game where players aim to pocket their assigned set of balls before sinking the 8 ball to win the match.
+
+The game features realistic cue controls, ball physics and rule based win and foul conditions.`,
+          icon: "/AppIcons/8Ball.webp",
+          videoUrl: "/media/8-ball-pool/gameplay.mp4",
+          screenshots: [
+            "/media/8-ball-pool/shot-1.webp",
+            "/media/8-ball-pool/shot-2.webp",
+            "/media/8-ball-pool/shot-3.webp",
+            "/media/8-ball-pool/shot-4.webp",
+          ]
+        },
+        {
+          title: "Blackjack 21",
+          description: `Blackjack inspired card puzzle game where players clear card stacks by reaching 21, building five-card hands without exceeding 21, and using Wild Blackjack Cards strategically.
+
+A custom deck generator was developed to create balanced deck layouts that support engaging gameplay, controlled difficulty progression, and varied level experiences.`,
+          icon: "/AppIcons/Blackjack.webp",
+          videoUrl: "/media/blackjack-21/gameplay.mp4",
+          screenshots: [
+            "/media/blackjack-21/shot-1.webp",
+            "/media/blackjack-21/shot-2.webp",
+            "/media/blackjack-21/shot-3.webp",
+            "/media/blackjack-21/shot-4.webp",
           ]
         },
         {
@@ -229,6 +231,65 @@ Words can run horizontally, vertically or diagonally, and finding them in quick 
           ]
         }
       ],
+      features: [
+        {
+          title: "Side Mechanics",
+          description: `Reward mini-games and live events inside Spark that keep players coming back between matches.
+
+Includes Plinko, where players drop balls through a peg board for gems and cash with free-ball bonuses and a level-up track; a daily Spin Wheel; and seasonal events such as Christmas Craze.`,
+          icon: "/AppIcons/SideMechanics.webp",
+          videoUrl: "/media/side-mechanics/gameplay.mp4",
+          screenshots: [
+            "/media/side-mechanics/shot-1.webp",
+            "/media/side-mechanics/shot-2.webp",
+            "/media/side-mechanics/shot-3.webp",
+            "/media/side-mechanics/shot-4.webp",
+          ]
+        },
+        {
+          title: "Season Pass",
+          description: `Progression system where players earn pass points from matches and offers to unlock rewards on a free track, with a premium Golden Pass track for bigger prizes.
+
+Built to run as themed seasons, such as the Sparky, Halloween and Christmas passes, each with its own visuals and reward chests.`,
+          icon: "/AppIcons/SeasonPass.webp",
+          videoUrl: "/media/season-pass/gameplay.mp4",
+          screenshots: [
+            "/media/season-pass/shot-1.webp",
+            "/media/season-pass/shot-2.webp",
+            "/media/season-pass/shot-3.webp",
+            "/media/season-pass/shot-4.webp",
+          ]
+        },
+        {
+          title: "Offers",
+          description: `Limited-time offer events inside Spark, each with its own theme, reward track and grand prize.
+
+Includes progression offers such as Party Night and Soul Hunt, step-by-step bundles like Jungle Safari, tiered packs such as Kickoff Picks, and choice offers like Pick One.`,
+          icon: "/AppIcons/Offers.webp",
+          videoUrl: "/media/offers/gameplay.mp4",
+          extraVideos: ["/media/offers/gameplay-2.mp4"],
+          screenshots: [
+            "/media/offers/shot-1.webp",
+            "/media/offers/shot-2.webp",
+            "/media/offers/shot-3.webp",
+          ]
+        },
+        {
+          title: "Challenges",
+          description: `Goal-based challenge events inside Spark that reward players for playing across games, with a grand prize at the end of each event.
+
+Includes game-specific challenges like the Bubble Shooter Challenge, Cash Climb and Gem Trade challenges, journey events such as Ocean Odyssey and Christmas Journey, and Sparky Levels progression.`,
+          icon: "/AppIcons/Challenges.webp",
+          screenshots: [
+            "/media/challenges/shot-1.webp",
+            "/media/challenges/shot-2.webp",
+            "/media/challenges/shot-3.webp",
+            "/media/challenges/shot-4.webp",
+            "/media/challenges/shot-5.webp",
+            "/media/challenges/shot-6.webp",
+          ]
+        }
+      ],
       iosLink: "https://apps.apple.com/us/app/spark-win-cash/id6670211183"
     },
     {
@@ -286,96 +347,98 @@ Words can run horizontally, vertically or diagonally, and finding them in quick 
     }
   ];
 
-  // One video from every game — flattened list for an at-a-glance overview.
-  // Projects with sub-games produce one card per sub-game; otherwise the project itself.
-  const overviewGames = projects.flatMap((project) =>
-    project.subGames
-      ? project.subGames.map((sub) => ({
-          title: sub.title,
-          icon: sub.icon,
-          videoUrl: sub.videoUrl,
-        }))
-      : project.videoUrl
-        ? [{ title: project.title, icon: project.icon, videoUrl: project.videoUrl }]
-        : []
-  );
+  // Spark is the platform: its games and in-app features are shown together in one block.
+  // Everything else is a standalone title. The detail panel pages through all of them in on-screen order.
+  const spark = projects.find((p) => p.subGames)!;
+  const sparkLink = { title: spark.title, subtitle: spark.subtitle, icon: spark.icon, iosLink: spark.iosLink };
+  const sparkGames: GameEntry[] = (spark.subGames ?? []).map((g) => ({ ...g, platform: sparkLink }));
+  const sparkFeatures: GameEntry[] = (spark.features ?? []).map((f) => ({ ...f, platform: sparkLink, kind: 'feature' }));
+  const otherGames: GameEntry[] = projects
+    .filter((p) => !p.subGames && p.videoUrl)
+    .map((p) => ({
+      title: p.title,
+      subtitle: p.subtitle,
+      icon: p.icon,
+      videoUrl: p.videoUrl,
+      screenshots: p.screenshots ?? [],
+      description: p.description,
+      iosLink: p.iosLink,
+      androidLink: p.androidLink,
+    }));
+  const allEntries = [...sparkGames, ...sparkFeatures, ...otherGames];
 
+  const [activeGame, setActiveGame] = useState<number | null>(null);
+  const closeDetail = useCallback(() => setActiveGame(null), []);
 
-  const openLightbox = (type: 'video' | 'image', src: string, title: string) => {
-    setLightboxMedia({ type, src, title });
-  };
-
-  // Start the lightbox video right away; if the browser blocks autoplay with sound, fall back to muted
-  const startPlayback = (video: HTMLVideoElement | null) => {
-    if (!video) return;
-    video.play().catch(() => {
-      video.muted = true;
-      video.play().catch(() => {});
-    });
-  };
-
-  const closeLightbox = () => {
-    setLightboxMedia(null);
-  };
-
-  // While lightbox is open: close on ESC + lock background scroll
-  useEffect(() => {
-    if (!lightboxMedia) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') closeLightbox();
-    };
-    document.addEventListener('keydown', onKey);
-    document.documentElement.classList.add('overflow-hidden');
-    return () => {
-      document.removeEventListener('keydown', onKey);
-      document.documentElement.classList.remove('overflow-hidden');
-    };
-  }, [lightboxMedia]);
-
-  const renderMediaGrid = (project: Project, subGame?: SubGame) => {
-    const videoUrl = subGame?.videoUrl ?? project.videoUrl ?? '';
-    const screenshots = subGame?.screenshots ?? project.screenshots ?? [];
-    const title = subGame?.title ?? project.title;
-
+  // Each card is the game's own little space: gameplay loop on top, a footer with its big icon
+  // overlapping the video edge, the title and a "View details" cue. The whole card opens the detail panel.
+  const renderCard = (entry: GameEntry) => {
+    const index = allEntries.indexOf(entry);
     return (
-      <div className="flex flex-wrap justify-center gap-4">
-        <div
-          className="relative group/media overflow-hidden rounded-xl shadow-lg transition-all duration-300 cursor-pointer hover:scale-[1.02] w-[calc(50%-8px)] md:w-[calc(33.33%-11px)] lg:w-[calc(20%-13px)]"
-          onClick={() => openLightbox('video', videoUrl, `${title} Gameplay`)}
-        >
-          <div className="relative bg-zinc-800/50 rounded-xl p-0.5 group-hover/media:ring-1 group-hover/media:ring-amber-500/30 transition-all duration-300">
-            <div className="relative overflow-hidden rounded-lg">
-              <LazyVideo
-                src={previewOf(videoUrl)}
-                poster={posterOf(videoUrl)}
-                className="w-full aspect-[8/16]"
-              />
-            </div>
-          </div>
+      <button
+        key={entry.title}
+        type="button"
+        onClick={() => setActiveGame(index)}
+        className="group/ov flex flex-col overflow-hidden rounded-2xl border border-[var(--border-card)] bg-gradient-to-b from-white/[0.05] to-white/[0.015] text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-xl hover:shadow-black/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] w-[calc((100%-1rem)/2)] sm:w-[calc((100%-2*1rem)/3)] md:w-[calc((100%-4*1rem)/5)] xl:w-[calc((100%-4*1.25rem)/5)]"
+        aria-label={`${entry.title}: gameplay and details`}
+      >
+        <div className="relative bg-zinc-900/40">
+          {entry.videoUrl ? (
+            <LazyVideo
+              src={previewOf(entry.videoUrl)}
+              poster={posterOf(entry.videoUrl)}
+              className="w-full aspect-[9/16]"
+            />
+          ) : (
+            <img
+              src={entry.screenshots[0]?.replace(/\.(webp|png|jpe?g)$/i, '-thumb.webp')}
+              alt=""
+              className="w-full aspect-[9/16] object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          )}
+          {/* Soft fade into the footer so the overlapping icon sits on a calm background */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-900/80 to-transparent" />
         </div>
 
-        {screenshots.map((screenshot: string, screenshotIndex: number) => (
-          <div
-            key={screenshotIndex}
-            className="relative group/media overflow-hidden rounded-xl shadow-lg transition-all duration-300 cursor-pointer hover:scale-[1.02] w-[calc(50%-8px)] md:w-[calc(33.33%-11px)] lg:w-[calc(20%-13px)]"
-            onClick={() => openLightbox('image', screenshot, `${title} Screenshot ${screenshotIndex + 1}`)}
-          >
-            <div className="relative bg-zinc-800/50 rounded-xl p-0.5 group-hover/media:ring-1 group-hover/media:ring-amber-500/30 transition-all duration-200">
-              <div className="relative overflow-hidden rounded-xl">
-                <img
-                  src={thumbOf(screenshot)}
-                  alt={`${title} Screenshot ${screenshotIndex + 1}`}
-                  className="w-full aspect-[8/16] object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-              </div>
-            </div>
+        <div className="relative flex items-start gap-2.5 px-2.5 pb-3.5 md:gap-3 md:px-3.5 md:pb-4">
+          <img
+            src={entry.icon}
+            alt=""
+            width={64}
+            height={64}
+            className="-mt-4 h-12 w-12 flex-shrink-0 object-cover shadow-lg shadow-black/50 transition-transform duration-300 group-hover/ov:scale-105 md:-mt-5 md:h-16 md:w-16"
+            loading="lazy"
+            decoding="async"
+            style={{ borderRadius: '28%' }}
+          />
+          <div className="min-w-0 flex-1 pt-3 md:pt-4">
+            <p className="line-clamp-2 text-[13px] font-bold leading-tight text-[var(--text-primary)] md:text-[15px]">{entry.title}</p>
+            <p className="mt-1 flex items-center whitespace-nowrap text-xs font-medium md:text-[13px] text-[var(--text-secondary)] transition-colors duration-300 group-hover/ov:text-[var(--accent)]">
+              <span className="sm:hidden">Details</span>
+              <span className="hidden sm:inline">View details</span>
+              <ChevronRight className="h-3.5 w-3.5 md:h-4 md:w-4 transition-transform duration-300 group-hover/ov:translate-x-0.5" />
+            </p>
           </div>
-        ))}
-      </div>
+        </div>
+      </button>
     );
   };
+
+  const renderGrid = (entries: GameEntry[]) => (
+    <div className="flex flex-wrap justify-center gap-4 xl:gap-5">{entries.map(renderCard)}</div>
+  );
+
+  const groupLabel = (label: string, count: number) => (
+    <div className="flex items-center gap-3 mb-5">
+      <h4 className="text-lg md:text-xl font-bold text-[var(--text-primary)]">{label}</h4>
+      <span className="rounded-full border border-[var(--border-card)] bg-white/[0.04] px-2.5 py-0.5 text-xs font-semibold text-[var(--text-secondary)]">
+        {count}
+      </span>
+      <span className="h-px flex-1 bg-gradient-to-r from-white/10 to-transparent" />
+    </div>
+  );
 
   return (
     <>
@@ -391,228 +454,54 @@ Words can run horizontally, vertically or diagonally, and finding them in quick 
             </div>
           </div>
 
-          {/* ─── QUICK OVERVIEW ─── One video per game, horizontally scrollable */}
-          <div className="mb-20 relative liquid-glass bg-[var(--bg-card)] rounded-3xl border border-[var(--border-card)] p-6 md:p-8">
-            {/* Header row */}
-            <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
-              <div className="text-left">
-                <h3 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)]">
-                  Quick <span className="text-[var(--accent)]">Overview</span>
-                </h3>
-                <p className="text-[var(--text-secondary)] text-sm md:text-base mt-1.5 max-w-xl">
-                  One clip from every game, tap any to watch full screen.
-                </p>
-              </div>
-            </div>
-
-            {/* Grid on tablet/desktop (every game visible), swipeable strip on phones */}
-            <div className="overflow-x-auto overflow-y-hidden pb-3 snap-x snap-mandatory scroll-px-1 md:overflow-visible md:snap-none md:pb-0">
-              <div className="flex gap-4 w-max pl-4 pr-0.5 md:w-auto md:flex-wrap md:justify-center md:pl-0 md:pr-0 md:gap-x-4 md:gap-y-7 xl:gap-x-5">
-                {overviewGames.map((game, overviewIndex) => (
-                  <button
-                    key={overviewIndex}
-                    type="button"
-                    onClick={() => openLightbox('video', game.videoUrl, `${game.title} Gameplay`)}
-                    className="group/ov flex-shrink-0 w-40 snap-start text-left cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-2xl md:w-[calc((100%-4*1rem)/5)] xl:w-[calc((100%-5*1.25rem)/6)]"
-                    aria-label={`${game.title} gameplay video`}
-                  >
-                    <div className="flex items-center gap-2 mb-2.5 px-0.5">
-                      <img
-                        src={game.icon}
-                        alt=""
-                        width={32}
-                        height={32}
-                        className="w-8 h-8 object-cover shadow-md flex-shrink-0"
-                        loading="lazy"
-                        decoding="async"
-                        style={{ borderRadius: '28%' }}
-                      />
-                      <span className="text-[13px] font-semibold leading-tight text-[var(--text-primary)] truncate">
-                        {game.title}
-                      </span>
-                    </div>
-
-                    <div className="relative overflow-hidden rounded-2xl border border-[var(--border-card)] bg-zinc-900/40 shadow-lg transition-all duration-300 group-hover/ov:border-amber-500/40 group-hover/ov:shadow-xl group-hover/ov:-translate-y-1">
-                      <LazyVideo
-                        src={previewOf(game.videoUrl)}
-                        poster={posterOf(game.videoUrl)}
-                        className="w-full aspect-[9/16]"
-                      />
-
-                      {/* Bottom darkening — contrast for the "Watch" badge */}
-                      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/70 to-transparent" />
-
-                      {/* Always-visible small "Watch" badge — makes it clear this is a video */}
-                      <div className="absolute bottom-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded-full bg-black/55 backdrop-blur-sm transition-opacity duration-300 group-hover/ov:opacity-0">
-                        <Play className="w-3 h-3 text-white fill-white" />
-                        <span className="text-[10px] font-semibold tracking-wide text-white">WATCH</span>
-                      </div>
-
-                      {/* Highlighted play button centered on hover */}
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/25 opacity-0 group-hover/ov:opacity-100 transition-opacity duration-300">
-                        <span className="flex items-center justify-center w-12 h-12 rounded-full bg-[var(--accent)] shadow-lg shadow-amber-500/30">
-                          <Play className="w-5 h-5 text-black fill-black ml-0.5" />
-                        </span>
-                      </div>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Mobile scroll hint */}
-            <p className="md:hidden text-center text-xs text-[var(--text-secondary)] mt-3">
-              Swipe to see more →
-            </p>
-          </div>
-
-          <div className="space-y-20">
-            {projects.map((project, index) => (
-              <div key={index} className="group relative">
-                <div className="relative">
-                  <div className="relative liquid-glass liquid-glass-lift bg-[var(--bg-card)] rounded-3xl border border-[var(--border-card)] overflow-hidden">
-                    <div className="relative p-8">
-                      <div className="text-center mb-8">
-                        <div className="flex items-center justify-center gap-4 mb-4">
-                          <div className="relative">
-                            <img
-                              src={project.icon}
-                              alt={project.title}
-                              className="w-16 h-16 object-cover shadow-2xl"
-                              loading="lazy"
-                              decoding="async"
-                              style={{
-                                borderRadius: '30%',
-                              }}
-                            />
-                          </div>
-                          <h3 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)]">{project.title}</h3>
-                        </div>
-
-                        <p className="text-base text-[var(--text-muted)] font-medium mb-2">{project.subtitle}</p>
-                        <p className="text-[var(--text-secondary)] text-base md:text-lg leading-relaxed max-w-3xl mx-auto mb-6 whitespace-pre-line">{project.description}</p>
-
-                        {(project.iosLink || project.androidLink) && (
-                          <div className="flex justify-center items-center space-x-4">
-                            {project.iosLink && (
-                              <a
-                                href={project.iosLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="app-store-btn"
-                              >
-                                <img
-                                  src="/apple-badge.0e21ce91.png"
-                                  alt="Download on the App Store"
-                                  className="h-12 w-auto"
-                                />
-                              </a>
-                            )}
-                            {project.androidLink && (
-                              <a
-                                href={project.androidLink}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="app-store-btn"
-                              >
-                                <img
-                                  src="/google-badge.78b7ab97.png"
-                                  alt="Get it on Google Play"
-                                  className="h-12 w-auto"
-                                />
-                              </a>
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      {project.subGames && (
-                        <div className="space-y-12 mb-12">
-                          {project.subGames.map((subGame, subGameIndex) => (
-                            <div key={subGameIndex} className="liquid-glass-soft bg-[var(--bg-card)] rounded-2xl border border-[var(--border-card)] overflow-hidden">
-                              <div className="p-6 md:p-8">
-                                <div className="text-center mb-6">
-                                  <div className="flex items-center justify-center gap-4 mb-4">
-                                    <div className="relative">
-                                      <img
-                                        src={subGame.icon}
-                                        alt={subGame.title}
-                                        className="w-16 h-16 object-cover shadow-lg"
-                                        loading="lazy"
-                                        decoding="async"
-                                        style={{
-                                          borderRadius: '30%',
-                                        }}
-                                      />
-                                    </div>
-                                    <h4 className="text-2xl md:text-3xl font-bold text-[var(--accent)]">{subGame.title}</h4>
-                                  </div>
-                                  <p className="text-[var(--text-muted)] text-base md:text-lg leading-relaxed max-w-4xl mx-auto whitespace-pre-line">{subGame.description}</p>
-                                </div>
-
-                                {renderMediaGrid(project, subGame)}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
-                      {!project.subGames && renderMediaGrid(project)}
-                    </div>
+          <div className="space-y-10">
+            {/* ─── SPARK WIN CASH ─── platform header, its games and in-app features */}
+            <div className="relative liquid-glass bg-[var(--bg-card)] rounded-3xl border border-[var(--border-card)] p-5 md:p-8">
+              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between mb-8">
+                <div className="flex items-center gap-4">
+                  <img
+                    src={spark.icon}
+                    alt=""
+                    width={64}
+                    height={64}
+                    className="w-16 h-16 object-cover shadow-2xl flex-shrink-0"
+                    style={{ borderRadius: '30%' }}
+                  />
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-[var(--text-primary)]">{spark.title}</h3>
+                    <p className="text-[var(--text-secondary)]">{spark.subtitle}</p>
                   </div>
                 </div>
+                {spark.iosLink && (
+                  <a href={spark.iosLink} target="_blank" rel="noopener noreferrer" className="app-store-btn self-start md:self-center">
+                    <img src="/apple-badge.0e21ce91.png" alt="Download on the App Store" className="h-11 w-auto" />
+                  </a>
+                )}
               </div>
-            ))}
+              <p className="text-[var(--text-muted)] text-sm md:text-base leading-relaxed max-w-3xl -mt-3 mb-8">{spark.description}</p>
+
+              {groupLabel('Games', sparkGames.length)}
+              {renderGrid(sparkGames)}
+
+              {sparkFeatures.length > 0 && (
+                <div className="mt-10">
+                  {groupLabel('In-app features', sparkFeatures.length)}
+                  {renderGrid(sparkFeatures)}
+                </div>
+              )}
+            </div>
+
+            {/* ─── OTHER PROJECTS ─── */}
+            <div className="relative liquid-glass bg-[var(--bg-card)] rounded-3xl border border-[var(--border-card)] p-5 md:p-8">
+              {groupLabel('Other Projects', otherGames.length)}
+              {renderGrid(otherGames)}
+            </div>
           </div>
         </div>
       </section>
 
-      {lightboxMedia && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-4"
-          onClick={closeLightbox}
-          role="dialog"
-          aria-modal="true"
-          aria-label={lightboxMedia.title}
-        >
-          <div className="relative max-w-4xl max-h-full">
-            <button
-              onClick={closeLightbox}
-              className="absolute -top-12 right-0 text-white/80 hover:text-white transition-colors duration-200 z-10 drop-shadow"
-            >
-              <X className="w-8 h-8" />
-            </button>
-
-            <div
-              className="relative bg-black rounded-lg overflow-hidden shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {lightboxMedia.type === 'video' ? (
-                <video
-                  key={lightboxMedia.src}
-                  ref={startPlayback}
-                  className="max-w-full max-h-[80vh] w-auto h-auto"
-                  controls
-                  autoPlay
-                  preload="auto"
-                  playsInline
-                >
-                  <source
-                    src={lightboxMedia.src}
-                    type={lightboxMedia.src.toLowerCase().includes('.mov') ? 'video/quicktime' : 'video/mp4'}
-                  />
-                </video>
-              ) : (
-                <img
-                  src={lightboxMedia.src}
-                  alt={lightboxMedia.title}
-                  className="max-w-full max-h-[80vh] w-auto h-auto object-contain"
-                  loading="lazy"
-                />
-              )}
-            </div>
-          </div>
-        </div>
+      {activeGame !== null && (
+        <GameDetail games={allEntries} index={activeGame} onNavigate={setActiveGame} onClose={closeDetail} />
       )}
     </>
   );
