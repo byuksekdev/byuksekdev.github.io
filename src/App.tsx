@@ -4,8 +4,11 @@ import About from './components/About';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import AnimatedBackground from './components/AnimatedBackground';
+import { initAnalytics } from './lib/analytics';
 
 function App() {
+  useEffect(() => initAnalytics(), []);
+
   useEffect(() => {
     const prefersReduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     if (prefersReduced) return;

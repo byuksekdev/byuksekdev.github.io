@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, Maximize2, Play, X } from 'lucide-react';
 import LazyVideo from './LazyVideo';
+import { track } from '../lib/analytics';
 
 export interface GameEntry {
   title: string;
@@ -82,11 +83,22 @@ const GameDetail = ({ games, index, onNavigate, onClose }: GameDetailProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const touchX = useRef<number | null>(null);
 
-  // New game: close the viewer and scroll back to the top
+  // Plain string so the effect below runs once per game, not on every re-render
+  const viewGroup = game.kind === 'feature' ? 'In-app feature' : game.platform ? game.platform.title : 'Other project';
+
+  // New game: close the viewer, scroll back to the top, and count the view (also when paging with Next/Previous)
   useEffect(() => {
     setViewing(null);
     scrollRef.current?.scrollTo({ top: 0 });
-  }, [index]);
+    track('View project', { title: game.title, group: viewGroup });
+  }, [index, game.title, viewGroup]);
+
+  // Opening a tile full size: which game, and whether it was a video or a screenshot
+  useEffect(() => {
+    if (viewing === null) return;
+    track('Open media', { title: game.title, type: media[viewing]?.type === 'video' ? 'video' : 'screenshot' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only when a new tile is opened
+  }, [viewing]);
 
   // Background scroll locked while open; focus returns to the opener on close
   useEffect(() => {
