@@ -60,7 +60,7 @@ const Projects = () => {
         },
         {
           title: "Can Smash",
-          description: `Physics-based arcade game where players fire balls from a cannon to knock down towering stacks of cans and blocks and clear the platform.
+          description: `Physics-based game where players fire balls from a cannon to knock down towering stacks of cans and blocks and clear the platform.
 
 Each level brings a new structure to topple, with a limited number of balls and a time bonus for clearing the stage quickly.`,
           icon: "/AppIcons/CanSmash.webp",
