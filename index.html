@@ -19,6 +19,16 @@
     <meta name="theme-color" content="#000000" />
     <meta name="apple-mobile-web-app-capable" content="no" />
     <title>Burak Yüksek · Game Developer</title>
+    <!-- Exclude your own visits: open the site once with ?notrack on each of your browsers/devices.
+         ?track turns counting back on. The flag is Umami's own opt-out (localStorage "umami.disabled"). -->
+    <script>
+      try {
+        var q = location.search;
+        if (/[?&]notrack(=|&|$)/.test(q)) localStorage.setItem('umami.disabled', '1');
+        else if (/[?&]track(=|&|$)/.test(q)) localStorage.removeItem('umami.disabled');
+        if (/[?&](no)?track(=|&|$)/.test(q)) history.replaceState(null, '', location.pathname + location.hash);
+      } catch (e) {}
+    </script>
     <!-- Umami: cookieless analytics, only counts visits on the live domain (not localhost) -->
     <script defer src="https://cloud.umami.is/script.js" data-website-id="7c07b984-c35d-4872-a2af-1836cab41a6f" data-domains="byuksekdev.github.io"></script>
   </head>
