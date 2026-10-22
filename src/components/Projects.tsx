@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import LazyVideo from './LazyVideo';
 import GameDetail from './GameDetail';
 import type { GameEntry } from './GameDetail';
+import { cardHovered } from '../lib/analytics';
 
 // Cards play a light 8s loop (preview.mp4 + preview.webp poster); the full gameplay.mp4 plays in the detail panel.
 const previewOf = (videoUrl: string) => videoUrl.replace(/gameplay\.mp4$/, 'preview.mp4');
@@ -368,6 +369,8 @@ Includes game-specific challenges like the Bubble Shooter Challenge, Cash Climb 
   const allEntries = [...sparkGames, ...sparkFeatures, ...otherGames];
 
   const [activeGame, setActiveGame] = useState<number | null>(null);
+  // Hovering a card for a moment (desktop) shows interest even without a click
+  const hoverTimer = useRef<number>();
   const closeDetail = useCallback(() => setActiveGame(null), []);
 
   // Each card is the game's own little space: gameplay loop on top, a footer with its big icon
@@ -379,6 +382,8 @@ Includes game-specific challenges like the Bubble Shooter Challenge, Cash Climb 
         key={entry.title}
         type="button"
         onClick={() => setActiveGame(index)}
+        onMouseEnter={() => (hoverTimer.current = window.setTimeout(() => cardHovered(entry.title), 1200))}
+        onMouseLeave={() => window.clearTimeout(hoverTimer.current)}
         className="group/ov flex flex-col overflow-hidden rounded-2xl border border-[var(--border-card)] bg-gradient-to-b from-white/[0.05] to-white/[0.015] text-left shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-amber-500/40 hover:shadow-xl hover:shadow-black/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] w-[calc((100%-1rem)/2)] sm:w-[calc((100%-2*1rem)/3)] md:w-[calc((100%-4*1rem)/5)] xl:w-[calc((100%-4*1.25rem)/5)]"
         aria-label={`${entry.title}: gameplay and details`}
       >
@@ -480,11 +485,13 @@ Includes game-specific challenges like the Bubble Shooter Challenge, Cash Climb 
               </div>
               <p className="text-[var(--text-muted)] text-sm md:text-base leading-relaxed max-w-3xl -mt-3 mb-8">{spark.description}</p>
 
-              {groupLabel('Games', sparkGames.length)}
-              {renderGrid(sparkGames)}
+              <div data-track-section="Spark games">
+                {groupLabel('Games', sparkGames.length)}
+                {renderGrid(sparkGames)}
+              </div>
 
               {sparkFeatures.length > 0 && (
-                <div className="mt-10">
+                <div className="mt-10" data-track-section="In-app features">
                   {groupLabel('In-app features', sparkFeatures.length)}
                   {renderGrid(sparkFeatures)}
                 </div>
@@ -492,7 +499,7 @@ Includes game-specific challenges like the Bubble Shooter Challenge, Cash Climb 
             </div>
 
             {/* ─── OTHER PROJECTS ─── */}
-            <div className="relative liquid-glass bg-[var(--bg-card)] rounded-3xl border border-[var(--border-card)] p-5 md:p-8">
+            <div data-track-section="Other projects" className="relative liquid-glass bg-[var(--bg-card)] rounded-3xl border border-[var(--border-card)] p-5 md:p-8">
               {groupLabel('Other Projects', otherGames.length)}
               {renderGrid(otherGames)}
             </div>

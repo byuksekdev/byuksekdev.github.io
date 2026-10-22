@@ -33,7 +33,7 @@ const About = () => {
   ];
 
   return (
-    <section id="about" className="pt-20 pb-8 px-4 relative">
+    <section id="about" data-track-section="About" className="pt-20 pb-8 px-4 relative">
       <div className="max-w-6xl mx-auto">
         <div className="about-card relative liquid-glass bg-[var(--bg-card)] border border-[var(--border-card)] rounded-3xl p-6 md:p-8">
           <div className="about-card-overlay absolute inset-0 bg-gradient-to-br from-amber-500/[0.03] via-transparent to-cyan-500/[0.03] rounded-3xl pointer-events-none" />

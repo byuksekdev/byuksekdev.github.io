@@ -29,7 +29,7 @@ const Contact = () => {
   ];
 
   return (
-    <section id="contact" className="py-20 px-4 relative">
+    <section id="contact" data-track-section="Contact" className="py-20 px-4 relative">
       <div className="max-w-4xl mx-auto">
         <div className="relative">
           <div className="relative liquid-glass bg-[var(--bg-card)] rounded-3xl p-8 md:p-12 border border-[var(--border-card)]">

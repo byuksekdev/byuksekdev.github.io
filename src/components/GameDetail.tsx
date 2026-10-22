@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, Maximize2, Play, X } from 'lucide-react';
 import LazyVideo from './LazyVideo';
-import { track } from '../lib/analytics';
+import { mediaOpened, projectClosed, projectOpened, setVideoPlaying, videoWatched } from '../lib/analytics';
 
 export interface GameEntry {
   title: string;
@@ -86,17 +86,29 @@ const GameDetail = ({ games, index, onNavigate, onClose }: GameDetailProps) => {
   // Plain string so the effect below runs once per game, not on every re-render
   const viewGroup = game.kind === 'feature' ? 'In-app feature' : game.platform ? game.platform.title : 'Other project';
 
-  // New game: close the viewer, scroll back to the top, and count the view (also when paging with Next/Previous)
+  // New game: close the viewer, scroll back to the top, and count the view (also when paging with Next/Previous).
+  // When the visitor moves on or closes the panel, record how long they spent on this game.
   useEffect(() => {
     setViewing(null);
     scrollRef.current?.scrollTo({ top: 0 });
-    track('View project', { title: game.title, group: viewGroup });
+    projectOpened(game.title, viewGroup);
+    const openedAt = performance.now();
+    return () => projectClosed(game.title, (performance.now() - openedAt) / 1000);
   }, [index, game.title, viewGroup]);
 
-  // Opening a tile full size: which game, and whether it was a video or a screenshot
+  // Opening a tile full size: which game, and whether it was a video or a screenshot.
+  // For a video, record how much of it was actually played once the visitor moves on.
+  const viewerVideo = useRef<HTMLVideoElement | null>(null);
   useEffect(() => {
     if (viewing === null) return;
-    track('Open media', { title: game.title, type: media[viewing]?.type === 'video' ? 'video' : 'screenshot' });
+    const isVideo = media[viewing]?.type === 'video';
+    mediaOpened(game.title, isVideo ? 'video' : 'screenshot');
+    if (!isVideo) return;
+    const video = viewerVideo.current;
+    return () => {
+      setVideoPlaying(false);
+      videoWatched(game.title, video);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps -- only when a new tile is opened
   }, [viewing]);
 
@@ -288,7 +300,21 @@ const GameDetail = ({ games, index, onNavigate, onClose }: GameDetailProps) => {
               )}
               <div className="flex h-full max-h-full items-center justify-center" onClick={(e) => e.stopPropagation()}>
                 {shown.type === 'video' ? (
-                  <video key={shown.src} ref={startPlayback} className="max-h-full max-w-full rounded-2xl bg-black" controls autoPlay playsInline preload="auto" poster={shown.thumb}>
+                  <video
+                    key={shown.src}
+                    ref={(el) => {
+                      viewerVideo.current = el;
+                      startPlayback(el);
+                    }}
+                    onPlay={() => setVideoPlaying(true)}
+                    onPause={() => setVideoPlaying(false)}
+                    className="max-h-full max-w-full rounded-2xl bg-black"
+                    controls
+                    autoPlay
+                    playsInline
+                    preload="auto"
+                    poster={shown.thumb}
+                  >
                     <source src={shown.src} type="video/mp4" />
                   </video>
                 ) : (

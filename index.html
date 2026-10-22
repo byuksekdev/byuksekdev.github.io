@@ -29,8 +29,9 @@
         if (/[?&](no)?track(=|&|$)/.test(q)) history.replaceState(null, '', location.pathname + location.hash);
       } catch (e) {}
     </script>
-    <!-- Umami: cookieless analytics, only counts visits on the live domain (not localhost) -->
-    <script defer src="https://cloud.umami.is/script.js" data-website-id="7c07b984-c35d-4872-a2af-1836cab41a6f" data-domains="byuksekdev.github.io"></script>
+    <!-- Umami: cookieless analytics, only on the live domain (not localhost). Auto-tracking is off:
+         src/lib/analytics.ts sends the page view once the visitor engages (filters out link-scanner bots). -->
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="7c07b984-c35d-4872-a2af-1836cab41a6f" data-domains="byuksekdev.github.io" data-auto-track="false"></script>
   </head>
   <body>
     <div id="root"></div>
