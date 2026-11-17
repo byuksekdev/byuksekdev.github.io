@@ -74,17 +74,17 @@ Each level brings a new structure to topple, with a limited number of balls and 
           ]
         },
         {
-          title: "Pixel Blast",
-          description: `Color-matching puzzle game where players send numbered shooters onto a conveyor track around a pixel-art picture. Each shooter blasts the pixels of its own color until the whole picture is cleared.
+          title: "Car Loop",
+          description: `Color-sorting puzzle game where cars drive around a loop road and players park them into lanes, filling each lane with cars of a single color.
 
-Players decide which shooters to deploy and manage a limited number of track slots, with every level built around a new pixel-art image.`,
-          icon: "/AppIcons/PixelBlast.webp",
-          videoUrl: "/media/pixel-blast/gameplay.mp4",
+Hidden cars, limited parking slots and combo multipliers for quick, consecutive sorts keep every level a race against the board.`,
+          icon: "/AppIcons/CarLoop.webp",
+          videoUrl: "/media/car-loop/gameplay.mp4",
           screenshots: [
-            "/media/pixel-blast/shot-1.webp",
-            "/media/pixel-blast/shot-2.webp",
-            "/media/pixel-blast/shot-3.webp",
-            "/media/pixel-blast/shot-4.webp",
+            "/media/car-loop/shot-1.webp",
+            "/media/car-loop/shot-2.webp",
+            "/media/car-loop/shot-3.webp",
+            "/media/car-loop/shot-4.webp",
           ]
         },
         {
@@ -115,6 +115,20 @@ Developed a custom level editor to support the creation of varied level layouts 
             "/media/color-blocks/shot-2.webp",
             "/media/color-blocks/shot-3.webp",
             "/media/color-blocks/shot-4.webp",
+          ]
+        },
+        {
+          title: "Pixel Blast",
+          description: `Color-matching puzzle game where players send numbered shooters onto a conveyor track around a pixel-art picture. Each shooter blasts the pixels of its own color until the whole picture is cleared.
+
+Players decide which shooters to deploy and manage a limited number of track slots, with every level built around a new pixel-art image.`,
+          icon: "/AppIcons/PixelBlast.webp",
+          videoUrl: "/media/pixel-blast/gameplay.mp4",
+          screenshots: [
+            "/media/pixel-blast/shot-1.webp",
+            "/media/pixel-blast/shot-2.webp",
+            "/media/pixel-blast/shot-3.webp",
+            "/media/pixel-blast/shot-4.webp",
           ]
         },
         {
